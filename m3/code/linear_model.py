@@ -27,6 +27,8 @@ def imp_print(info,slen=20):
     print ("="*slen)
     print (info)
     print ("="*slen)
+    
+  
 #####################
 # Data Loading
 #####################
@@ -58,6 +60,8 @@ ntrain = train.shape[0]
 nval = val.shape[0]
 ntest = test.shape[0]
 y_train = train[train.columns[0]].values
+y_val = val[val.columns[0]].values
+y_test = test[test.columns[0]].values
 all_data = pd.concat((train, val, test)).reset_index(drop=True)
 all_data.drop(train.columns[0], axis=1, inplace=True)
 print("all_data size is : {}".format(all_data.shape))
@@ -107,7 +111,7 @@ print(skewness.head(10))
 ##plt.close()
 #==============================================================================
 #skewness = skewness[abs(skewness) > 0.75]
-#print("There are {} skewed numerical features to Box Cox transform".format(skewness.shape[0]))
+##print("There are {} skewed numerical features to Box Cox transform".format(skewness.shape[0]))
 #skewed_features = skewness.index
 #lam = 0.15
 #for feat in skewed_features:
@@ -124,12 +128,116 @@ from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
 from sklearn.ensemble import RandomForestRegressor,  GradientBoostingRegressor
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler,StandardScaler
 from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin, clone
 from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.metrics import mean_squared_error
 import xgboost as xgb
 import lightgbm as lgb
+
+# get the train and val and test data
+train = all_data[:ntrain]
+val = all_data[ntrain:nval+ntrain]
+test = all_data[nval+ntrain:]
+# kfold on train set evaluation
+n_folds = 5
+def rmse_cv(model):
+    kf = KFold(n_folds, shuffle=True, random_state=42).get_n_splits(train.values)
+    rmse= np.sqrt(-cross_val_score(model, train.values, y_train, scoring="neg_mean_squared_error", cv = kf))
+    return(rmse)
+######
+# BASIC MODELS
+######
+## Notice that here the outliers are removed by RobustScaler() in the pipeline!
+######
+# Lasso Regression
+######
+scaler = StandardScaler()
+#scaler = RobustScaler()
+lasso = make_pipeline(scaler, Lasso(alpha =0.05, random_state=1))
+######
+# Elastic Net Regression :
+######
+ENet = make_pipeline(scaler, ElasticNet(alpha=0.05, l1_ratio=0.8, random_state=5))
+######
+# Kernel Ridge Regression :
+######
+KRR = KernelRidge(alpha=0.6, kernel='polynomial', degree=2, coef0=2.5)
+######
+# Gradient Boosting Regression :
+######
+## With huber loss that makes it robust to outliers
+GBoost = GradientBoostingRegressor(n_estimators=300, learning_rate=0.05,
+                                   max_depth=4, max_features='sqrt',
+                                   min_samples_leaf=15, min_samples_split=10, 
+                                   loss='huber', random_state =5)
+######
+# Xgboost :
+######
+model_xgb = xgb.XGBRegressor(colsample_bytree=0.2, gamma=0.0, 
+                             learning_rate=0.05, max_depth=6, 
+                             min_child_weight=1.5, n_estimators=1000,
+                             reg_alpha=0.9, reg_lambda=0.6,
+                             subsample=0.2,seed=42, silent=1,
+                             random_state =7)
+######
+# LightGBM
+######
+model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
+                              learning_rate=0.05, n_estimators=720,
+                              max_bin = 55, bagging_fraction = 0.8,
+                              bagging_freq = 5, feature_fraction = 0.2319,
+                              feature_fraction_seed=9, bagging_seed=9,
+                              min_data_in_leaf =6, min_sum_hessian_in_leaf = 11)
+######
+# Base models scores: 
+######
+#==============================================================================
+def evaluate_val(model,topk=50):
+    model.fit(train.values,y_train)
+    y_val_pred = model.predict(val.values)
+    ##### mse Evaluation
+    mse = mean_squared_error(y_val_pred, y_val)
+    print("Val mse score: {:.4f}".format(mse))
+    ##### stock Evaluation
+    # take top 50 stocks and calculate avg(label)
+    val_withPred = val.copy()
+    val_withPred["pred_val"] = y_val_pred 
+    val_withPred_sorted = val_withPred.sort_values("pred_val",ascending = True)
+    avg_label =  val_withPred_sorted[:topk][val_withPred_sorted.columns[0]].mean()
+    print("Val Dataset avg label score:{:.4f}".format(val[val.columns[0]].mean()))
+    print("Val top"+str(topk)+" avg label score: {:.4f}".format(avg_label))
+def evaluate_test(model,topk=50):
+    model.fit(val.values,y_val)
+    y_test_pred = model.predict(test.values)
+    ##### mse Evaluation
+    mse = mean_squared_error(y_test_pred, y_test)
+    print("Test mse score: {:.4f}".format(mse))
+    ##### stock Evaluation
+    # take top 50 stocks and calculate avg(label)
+    test_withPred = test.copy()
+    test_withPred["pred_val"] = y_test_pred 
+    test_withPred_sorted = test_withPred.sort_values("pred_val",ascending = True)
+    avg_label =  test_withPred_sorted[:topk][test_withPred_sorted.columns[0]].mean()
+    print("Test Dataset avg label score:{:.4f}".format(val[val.columns[0]].mean()))
+    print("Test top"+str(topk)+" avg label score: {:.4f}".format(avg_label))
+#==============================================================================
+imp_print("lasso:",10)
+evaluate_val(lasso)
+evaluate_test(lasso)
+imp_print("Enet:",10)
+evaluate_val(ENet)
+evaluate_test(ENet)
+imp_print("GBoost:",10)
+evaluate_val(GBoost)
+evaluate_test(GBoost)
+imp_print("model_xgb:",10)
+evaluate_val(model_xgb)
+evaluate_test(model_xgb)
+imp_print("model_lgb:",10)
+evaluate_val(model_lgb)
+evaluate_test(model_lgb)
+#==============================================================================
 
 
 print ("Finished...")
