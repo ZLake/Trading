@@ -216,10 +216,10 @@ def evaluate_test(model,topk=50):
     ##### stock Evaluation
     # take top 50 stocks and calculate avg(label)
     test_withPred = test.copy()
-    test_withPred["pred_val"] = y_test_pred 
-    test_withPred_sorted = test_withPred.sort_values("pred_val",ascending = True)
+    test_withPred["pred_test"] = y_test_pred 
+    test_withPred_sorted = test_withPred.sort_values("pred_test",ascending = True)
     avg_label =  test_withPred_sorted[:topk][test_withPred_sorted.columns[0]].mean()
-    print("Test Dataset avg label score:{:.4f}".format(val[val.columns[0]].mean()))
+    print("Test Dataset avg label score:{:.4f}".format(test[test.columns[0]].mean()))
     print("Test top"+str(topk)+" avg label score: {:.4f}".format(avg_label))
 #==============================================================================
 imp_print("lasso:",10)
