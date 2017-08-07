@@ -28,6 +28,11 @@ def imp_print(info,slen=20):
     print (info)
     print ("="*slen)
     
+#####################
+## define global parameters
+Params = {}
+#Params['algo'] = ['xgb']
+#Params['algo'] = ['lasso','ENet','GBoost','xgb','lgb']
   
 #####################
 # Data Loading
@@ -174,7 +179,7 @@ GBoost = GradientBoostingRegressor(n_estimators=300, learning_rate=0.05,
 ######
 # Xgboost :
 ######
-model_xgb = xgb.XGBRegressor(colsample_bytree=0.2, gamma=0.0, 
+model_xgb = xgb.XGBRegressor(objective='reg:linear',colsample_bytree=0.2, gamma=0.0, 
                              learning_rate=0.05, max_depth=6, 
                              min_child_weight=1.5, n_estimators=1000,
                              reg_alpha=0.9, reg_lambda=0.6,
@@ -222,21 +227,26 @@ def evaluate_test(model,topk=50):
     print("Test Dataset avg label score:{:.4f}".format(test[test.columns[0]].mean()))
     print("Test top"+str(topk)+" avg label score: {:.4f}".format(avg_label))
 #==============================================================================
-imp_print("lasso:",10)
-evaluate_val(lasso)
-evaluate_test(lasso)
-imp_print("Enet:",10)
-evaluate_val(ENet)
-evaluate_test(ENet)
-imp_print("GBoost:",10)
-evaluate_val(GBoost)
-evaluate_test(GBoost)
-imp_print("model_xgb:",10)
-evaluate_val(model_xgb)
-evaluate_test(model_xgb)
-imp_print("model_lgb:",10)
-evaluate_val(model_lgb)
-evaluate_test(model_lgb)
+if('lasso' in Params['algo']):
+    imp_print("lasso:",10)
+    evaluate_val(lasso)
+    evaluate_test(lasso)
+if('ENet' in Params['algo']):
+    imp_print("Enet:",10)
+    evaluate_val(ENet)
+    evaluate_test(ENet)
+if('GBoost' in Params['algo']):
+    imp_print("GBoost:",10)
+    evaluate_val(GBoost)
+    evaluate_test(GBoost)
+if('xgb' in Params['algo']):
+    imp_print("model_xgb:",10)
+    evaluate_val(model_xgb)
+    evaluate_test(model_xgb)
+if('lgb' in Params['algo']):
+    imp_print("model_lgb:",10)
+    evaluate_val(model_lgb)
+    evaluate_test(model_lgb)
 #==============================================================================
 
 
