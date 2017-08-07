@@ -19,7 +19,7 @@ def imp_print(info,slen=20):
     print ("="*slen)
 def imp_print2(info,slen=10):
     print ("="*slen + info + "="*slen)
-    
+
 def argParser():
     print ("arg len:" + str(len(sys.argv)))
     # init args
@@ -33,20 +33,21 @@ def argParser():
         raise Exception("more then 2 args, only split_num and dest are required")
 
     return args
-    
+
 def read(split_num=1200,dest='../input/'):
     """
     split_num:data <= split_num.csv => training set
               data >  spllt_num.csv => testing  set
-    dest: dir path contains all csv files          
+    dest: dir path contains all csv files
     """
     imp_print2("Running Info",15)
     print("CSV data files loc:"+dest)
     print("Training set:data <= "+str(split_num)+".csv")
     print("Testing  set:data >  "+str(split_num)+".csv")
-    files_str = check_output(["ls", "../input"])
+    files_str = check_output(["ls", dest]).decode("utf-8")
+#    print(files_str)
     files_list = [int(file_str.strip('.csv')) for file_str in files_str.strip('\n').split('\n')]
-    # train 
+    # train
     train = pd.DataFrame()
     # test
     test = pd.DataFrame()
@@ -80,4 +81,4 @@ if __name__ == "__main__":
         read(**args)
     else:
         read()
-    
+
