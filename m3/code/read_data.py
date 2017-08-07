@@ -21,7 +21,7 @@ def imp_print2(info,slen=10):
     print ("="*slen + info + "="*slen)
     
 def argParser():
-    print "arg len:" + str(len(sys.argv))
+    print ("arg len:" + str(len(sys.argv)))
     # init args
     args = {}
     if len(sys.argv)==2:
