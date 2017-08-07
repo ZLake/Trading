@@ -47,6 +47,7 @@ def read(split_num=1200,dest='../input/'):
     files_str = check_output(["ls", dest]).decode("utf-8")
 #    print(files_str)
     files_list = [int(file_str.strip('.csv')) for file_str in files_str.strip('\n').split('\n')]
+    files_list.sort()
     # train
     train = pd.DataFrame()
     # test
