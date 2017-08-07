@@ -30,7 +30,7 @@ def argParser():
         args["split_num"] = int(sys.argv[1])
         args["dest"] = sys.argv[2]
     elif len(sys.argv)>3:
-        raise Exception,"more then 2 args, only split_num and dest are required"
+        raise Exception("more then 2 args, only split_num and dest are required")
 
     return args
     
