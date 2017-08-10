@@ -55,11 +55,15 @@ def read(split_num=1200,dest='../input/'):
     imp_print2("Start Reading Data")
     imp_print2("Train set",3)
     for i in range(files_list.index(split_num)+1):
-        train = pd.concat((train,pd.read_csv(dest+str(files_list[i])+".csv",header=None))).reset_index(drop=True)
+        temp_train = pd.read_csv(dest+str(files_list[i])+".csv",header=None)
+        temp_train.insert(0, 'csv_index', files_list[i])
+        train = pd.concat((train,temp_train)).reset_index(drop=True)
         print('Training set now processing: '+ str(files_list[i])+".csv, after train sample number: "+ str(len(train)))
     imp_print2("Test set",3)
     for j in range(files_list.index(split_num)+1,len(files_list)):
-        test = pd.concat((test,pd.read_csv(dest+str(files_list[i])+".csv",header=None))).reset_index(drop=True)
+        temp_test = pd.read_csv(dest+str(files_list[j])+".csv",header=None)
+        temp_test.insert(0, 'csv_index', files_list[j])
+        test = pd.concat((test,temp_test)).reset_index(drop=True)
         print('Testing  set now processing: '+ str(files_list[j])+".csv, after test sample number: "+ str(len(test)))
     imp_print2("End Reading Data",11)
     print ("train set size:{}".format(train.shape))
