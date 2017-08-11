@@ -34,7 +34,7 @@ def argParser():
 
     return args
 
-def read(split_num=1200,dest='../input/'):
+def read(split_num=1332,dest='../input/'):
     """
     split_num:data <= split_num.csv => training set
               data >  spllt_num.csv => testing  set
@@ -80,12 +80,12 @@ def read(split_num=1200,dest='../input/'):
     imp_print2("Saving Data",13)
     if not os.path.exists("DataSet/"):
         os.makedirs("DataSet/")
-    train_filename = "train_"+str(split_num)+"_"+str(max(files_list))
-    test_filename = "test_"+str(split_num)+"_"+str(max(files_list))
-    train.to_pickle("DataSet/"+train_filename)
-    test.to_pickle("DataSet/"+test_filename)
-    print("train data: DataSet/" +train_filename)
-    print("test  data: DataSet/" +test_filename )
+    train_filename = "DataSet/"+"train_"+str(split_num)+"_"+str(max(files_list))+'.h5'
+    test_filename = "DataSet/"+"test_"+str(split_num)+"_"+str(max(files_list))+'.h5'
+    train.to_hdf(train_filename,'train',format='table',append=False)
+    test.to_hdf(test_filename,'test',format='table',append=False)
+    print("train data: " +train_filename)
+    print("test  data: " +test_filename )
     imp_print2("Done",15)
 
 if __name__ == "__main__":
