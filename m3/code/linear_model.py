@@ -10,9 +10,12 @@ import scipy as sp
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
 from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import make_pipeline,Pipeline
 from sklearn.preprocessing import RobustScaler,StandardScaler
 from sklearn.metrics import mean_squared_error
+
+from sklearn.model_selection import GridSearchCV
+
 #
 def imp_print(info,slen=20):
     print ("="*slen)
@@ -38,7 +41,7 @@ def evaluate_test(model,topk=50):
 ## define global parameters
 Params = {}
 Params['algo'] = ['lasso']
-
+param_grid = dict(lasso__alpha=[0.01,0.05,0.1,0.5, 1.0])
 #####################
 # Read the data: 选择数据的时间段
 #####################
@@ -94,11 +97,16 @@ test = all_data[ntrain:]
 ######
 scaler = StandardScaler()
 #scaler = RobustScaler()
-lasso = make_pipeline(scaler, Lasso(alpha =0.05, random_state=1))
-
+lasso = Pipeline(steps=[('scaler',scaler),
+                      ('lasso',Lasso(alpha =0.05, random_state=1))])
 #####################
 # # Test: 测试获取评价结果
 #####################
+# grid_search
+grid_search = GridSearchCV(lasso, param_grid=param_grid,cv = test)
+print('grid search result:')
+print(grid_search.best_params_)
+
 imp_print("Testing...",40)
 if('lasso' in Params['algo']):
     imp_print("lasso:",10)
