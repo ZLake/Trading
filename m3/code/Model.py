@@ -36,7 +36,7 @@ def report(results, n_top=3):
             print("Parameters: {0}".format(results['params'][candidate]))
             print("")
             
-def evaluate_test(model,topk=50):
+def evaluate_test(model,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
     model.fit(train.values,y_train)
     y_test_pred = model.predict(test.values)
@@ -50,11 +50,27 @@ def evaluate_test(model,topk=50):
     test_withPred.insert(0, 'csv_index', test_csv_index.values)
     csv_indexs = test_withPred['csv_index'].unique()
     # 每个index单独评分
-    test_withPred_sorted = test_withPred.sort_values("pred_test",ascending = True)
-    avg_label =  test_withPred_sorted[:topk][test_withPred_sorted.columns[0]].mean()
-    print("Test Dataset avg label score:{:.4f}".format(test[test.columns[0]].mean()))
-    print("Test top"+str(topk)+" avg label score: {:.4f}".format(avg_label))
-    
+    eval_df = pd.DataFrame(columns=['csv_index'
+                                    ,'topk'
+                                    ,'pred_avg'
+                                    ,'pred_std'
+                                    ,'pred_min'
+                                    ,'pred_max'
+                                    ,'simple_avg'])
+    for csv_index in csv_indexs:
+        temp_test = test_withPred[test_withPred['csv_index'] == csv_index]
+        temp_test_sorted = temp_test.sort_values("pred_test",ascending = True)
+        for topk in topks:
+            temp_select = temp_test_sorted[:topk][temp_test_sorted.columns[1]]
+            temp_avgLabel = temp_select.mean()
+            temp_stdLabel = temp_select.std()
+            temp_min = temp_select.min()
+            temp_max = temp_select.max()
+            temp_simple_avg = temp_test[temp_test.columns[1]].mean()
+            eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
+                                        ,temp_min,temp_max,temp_simple_avg]
+    return eval_df
+
 #####################
 ## define global parameters
 Params = {}
@@ -122,30 +138,30 @@ test = all_data[ntrain:]
 scaler = StandardScaler()
 #scaler = RobustScaler()
 lasso = Pipeline(steps=[('scaler',scaler),
-                      ('lasso',Lasso(alpha =0.05, random_state=1))])
+                      ('lasso',Lasso(alpha =0.01, random_state=1))])
 #####################
 # # Test: 测试获取评价结果
 #####################
 # grid search params
-param_grid = dict(scaler=[StandardScaler(),RobustScaler()]
-                  ,lasso__alpha=[0.03,0.04,0.05,0.06,0.07])
-# grid_search
-custom_cv = PredefinedSplit([-1]*ntrain+[1]*ntest)
-reggressor = GridSearchCV(lasso
-                           , param_grid=param_grid
-                           ,scoring = 'neg_mean_squared_error'
-                           ,cv = custom_cv
-                           ,n_jobs=-1, verbose=1)
-reggressor.fit(all_data.values,y_all_data)
-
-print('grid search result:')
-print('best score:'+ str(reggressor.best_score_))
-print('best params:'+ str(reggressor.best_params_))
-print('detailed results:',report(reggressor.cv_results_))
+#param_grid = dict(scaler=[StandardScaler(),RobustScaler()]
+#                  ,lasso__alpha=[0.03,0.04,0.05,0.06,0.07])
+## grid_search
+#custom_cv = PredefinedSplit([-1]*ntrain+[1]*ntest)
+#reggressor = GridSearchCV(lasso
+#                           , param_grid=param_grid
+#                           ,scoring = 'neg_mean_squared_error'
+#                           ,cv = custom_cv
+#                           ,n_jobs=-1, verbose=1)
+#reggressor.fit(all_data.values,y_all_data)
+#
+#print('grid search result:')
+#print('best score:'+ str(reggressor.best_score_))
+#print('best params:'+ str(reggressor.best_params_))
+#print('detailed results:',report(reggressor.cv_results_))
 
 imp_print("Testing...",40)
 if('lasso' in Params['algo']):
     imp_print("lasso:",10)
-    evaluate_test(lasso)
+    eval_df = evaluate_test(lasso)
 
 print ("Finished...")
