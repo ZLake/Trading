@@ -34,7 +34,7 @@ def argParser():
 
     return args
 
-def read(split_num=1200,dest='../input/'):
+def read(split_num=1331,dest='../input/'):
     """
     split_num:data <= split_num.csv => training set
               data >  spllt_num.csv => testing  set
