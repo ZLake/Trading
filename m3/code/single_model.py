@@ -221,7 +221,7 @@ for algo in Params['algo']:
                                ,scoring = top50_avg_loss
                                ,cv = custom_cv
                                ,refit = False
-                               ,n_jobs=-1
+                               ,n_jobs=4
                                ,verbose=1
                                ,return_train_score=False)
     reggressor.fit(all_data.values,y_all_data)
