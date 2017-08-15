@@ -33,7 +33,7 @@ def report(results, n_top=3):
         candidates = np.flatnonzero(results['rank_test_score'] == i)
         for candidate in candidates:
             print("Model with rank: {0}".format(i))
-            print("Mean validation score: {0:.5f} (std: {1:.5f})".format(
+            print("Mean validation score: {0:.10f} (std: {1:.10f})".format(
                   results['mean_test_score'][candidate],
                   results['std_test_score'][candidate]))
             print("Parameters: {0}".format(results['params'][candidate]))
@@ -115,14 +115,14 @@ Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                               ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
 # lgb params
 Params['model_lgb_grid_params'] = {
-    'learning_rate': [0.01,0.02]
-    ,'n_estimators': [8,24,48]
-    ,'num_leaves': [6,12]
+    'learning_rate': [0.005,0.01,0.02]
+    ,'n_estimators': [48,64,96]
+    ,'num_leaves': [6,12,18]
     ,'boosting_type' : ['gbdt']
     ,'objective' : ['regression']
     ,'seed' : [500]
-    ,'colsample_bytree' : [0.65, 0.75]
-    ,'subsample' : [0.7,0.75]
+    ,'colsample_bytree' : [0.6,0.65, 0.75]
+    ,'subsample' : [0.65,0.7,0.75]
 #    ,'reg_alpha' : [1,2,6]
 #    ,'reg_lambda' : [1,2,6]
     }
