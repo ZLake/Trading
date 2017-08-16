@@ -18,8 +18,12 @@ from sklearn.model_selection import GridSearchCV,PredefinedSplit
 
 from sklearn.metrics import make_scorer
 
-import lightgbm as lgb
+import multiprocessing
 
+import lightgbm as lgb
+import xgboost as xgb
+
+import time
 
 #User defined functions
 def imp_print(info,slen=20):
@@ -115,14 +119,14 @@ Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                               ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
 # lgb params
 Params['model_lgb_grid_params'] = {
-    'learning_rate': [0.005,0.01,0.02]
-    ,'n_estimators': [48,64,96]
-    ,'num_leaves': [6,12,18]
+    'learning_rate': [0.02]
+    ,'n_estimators': [48]
+    ,'num_leaves': [18]
     ,'boosting_type' : ['gbdt']
     ,'objective' : ['regression']
     ,'seed' : [500]
-    ,'colsample_bytree' : [0.6,0.65, 0.75]
-    ,'subsample' : [0.65,0.7,0.75]
+    ,'colsample_bytree' : [0.6]
+    ,'subsample' : [0.75]
 #    ,'reg_alpha' : [1,2,6]
 #    ,'reg_lambda' : [1,2,6]
     }
@@ -134,6 +138,7 @@ result_list = []
 # Read the data: 选择数据的时间段
 #####################
 imp_print("Data Loading...",40)
+read_start = time.time()
 # 数据格式 hdf5
 train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
 test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
@@ -153,14 +158,16 @@ test_ID = test[train.columns[1]]
 train.drop(train.columns[0:2], axis = 1, inplace = True)
 test.drop(test.columns[0:2], axis = 1, inplace = True)
 #check again the data size after dropping the 'Id' variable
+read_end = time.time()
 print("\nThe train data size after dropping Id feature is : {} ".format(train.shape)) 
 print("The test data size after dropping Id feature is : {} ".format(test.shape))
-
 # 
 #####################
 # Preprocess: 处理成训练和测试集合
 #####################
 imp_print("Data Processing...",40)
+proc_start = time.time()
+#############
 ntrain = train.shape[0]
 ntest = test.shape[0]
 y_train = train[train.columns[0]].values
@@ -179,11 +186,12 @@ if(missing_data.shape[0] == 0):
     imp_print("no missing data, go to next step...")
 else:
     imp_print("Need filling missing data...")
-
+proc_end = time.time()
 #####################
 # Modeling: 建模
 #####################
 imp_print("Modeling...",40)
+model_start = time.time()
 # get the train and val and test data
 train = all_data[:ntrain]
 test = all_data[ntrain:]
@@ -221,7 +229,7 @@ for algo in Params['algo']:
                                ,scoring = top50_avg_loss
                                ,cv = custom_cv
                                ,refit = False
-                               ,n_jobs=4
+                               ,n_jobs=multiprocessing.cpu_count()
                                ,verbose=1
                                ,return_train_score=False)
     reggressor.fit(all_data.values,y_all_data)
@@ -235,7 +243,7 @@ for algo in Params['algo']:
                                         ,'params'])
     for rank in range(1,Params['topK_params']+1):
         report_params(reggressor.cv_results_,rank,rank_params)
-           
+          
     #####################
     # # Test: 测试获取评价结果
     #####################
@@ -250,5 +258,11 @@ for algo in Params['algo']:
         
         for topk in eval_df['topk'].unique():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
-    
+model_end = time.time()
+   
+imp_print('Execution Time:')
+print("Reading data time cost: {}s".format(read_end - read_start))
+print("Processing data time cost: {}s".format(proc_end - proc_start))
+print("Modelling & Test data time cost: {}s".format(model_end - model_start))
+
 print ("Finished...")
