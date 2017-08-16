@@ -209,6 +209,7 @@ def training():
         num_threads = multiprocessing.cpu_count()//2
     else:
         num_threads = multiprocessing.cpu_count()
+    print('number of thread in training lgb:{}'.format(num_threads))
         
     model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
                                   learning_rate=0.05, n_estimators=720,
