@@ -140,8 +140,8 @@ def training():
     imp_print("Data Loading...",40)
     read_start = time.time()
     # 数据格式 hdf5
-    train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
-    test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
+    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
+    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
     # 选择数据时间段：todo
     train = train_raw
     test=test_raw
@@ -205,12 +205,18 @@ def training():
     ######
     # LightGBM
     ######
+    if multiprocessing.cpu_count() >=60:
+        num_threads = multiprocessing.cpu_count()//2
+    else:
+        num_threads = multiprocessing.cpu_count()
+        
     model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
                                   learning_rate=0.05, n_estimators=720,
                                   max_bin = 55, bagging_fraction = 0.8,
                                   bagging_freq = 5, feature_fraction = 0.2319,
                                   feature_fraction_seed=9, bagging_seed=9,
-                                  min_data_in_leaf =6, min_sum_hessian_in_leaf = 11
+                                  min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
+                                  num_threads = num_threads
                                   )
     #grid search params
     for algo in Params['algo']:
