@@ -141,8 +141,8 @@ result_list = []
 imp_print("Data Loading...",40)
 read_start = time.time()
 # 数据格式 hdf5
-train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
-test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
+train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
+test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
 # 选择数据时间段：todo
 train = train_raw
 test=test_raw
