@@ -24,6 +24,7 @@ import lightgbm as lgb
 import xgboost as xgb
 
 import time
+from sklearn.externals import joblib # solve OOM problem
 
 #User defined functions
 def imp_print(info,slen=20):
@@ -140,8 +141,8 @@ result_list = []
 imp_print("Data Loading...",40)
 read_start = time.time()
 # 数据格式 hdf5
-train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
-test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
+train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
+test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
 # 选择数据时间段：todo
 train = train_raw
 test=test_raw
@@ -233,7 +234,10 @@ for algo in Params['algo']:
                                ,n_jobs=multiprocessing.cpu_count()
                                ,verbose=1
                                ,return_train_score=False)
-    reggressor.fit(all_data.values,y_all_data)
+    
+    joblib.dump(all_data.values, 'DataSet/temp_all_data')
+    all_data_values = joblib.load('DataSet/temp_all_data', mmap_mode='r+')
+    reggressor.fit(all_data_values,y_all_data)
     
     print('grid search result:')
     print('best score:'+ str(reggressor.best_score_))
