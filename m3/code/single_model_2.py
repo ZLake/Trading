@@ -73,10 +73,10 @@ def top50_avg_loss(estimator, X, y):
     
 
             
-def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
+def evaluate_test(model,train_values,y_train,test_values,y_test,test_csv_index,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
-    model.fit(train.values,y_train)
-    y_test_pred = model.predict(test.values)
+    model.fit(train_values,y_train)
+    y_test_pred = model.predict(test_values)
     ##### mse Evaluation
     mse = mean_squared_error(y_test_pred, y_test)
     print("Test mse score: {:.10f}".format(mse))
@@ -231,8 +231,10 @@ def training():
         # # Test: 测试获取评价结果
         #####################
         imp_print("Testing...",40)
-
-        eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
+        train_values = train.values
+        test_values = test.values
+        del train,test
+        eval_df = evaluate_test(estimator,train_values,y_train,test_values,y_test,test_csv_index)
         
         print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
             
