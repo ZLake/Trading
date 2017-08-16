@@ -26,7 +26,6 @@ import xgboost as xgb
 import time
 from sklearn.externals import joblib # solve OOM problem
 
-
 #User defined functions
 def imp_print(info,slen=20):
     print ("="*slen)
@@ -74,9 +73,7 @@ def top50_avg_loss(estimator, X, y):
     
 
             
-def evaluate_test(model,params,topks=[50,30,10]):
-    # 设置训练参数：
-    model.set_params(**params)
+def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
     model.fit(train.values,y_train)
     y_test_pred = model.predict(test.values)
@@ -143,8 +140,8 @@ def training():
     imp_print("Data Loading...",40)
     read_start = time.time()
     # 数据格式 hdf5
-    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
-    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
+    train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
+    test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
     # 选择数据时间段：todo
     train = train_raw
     test=test_raw
@@ -220,53 +217,20 @@ def training():
         imp_print(algo,20)
         param_grid = Params[algo + '_grid_params']
         estimator = eval(algo)
-        # grid_search
-        # each csv is one test set
-        custom_cv = PredefinedSplit([-1]*ntrain+[1]*ntest)
-        customized_cv = [(range(ntrain),range(ntrain+ntest))]
+        # set estimator parameters 
+        
         # get csv_index in the test set for gridsearch evaluation
-        global test_csvIndexs 
-        test_csvIndexs = test_csv_index.unique()
-        
-        reggressor = GridSearchCV(estimator
-                                   , param_grid=param_grid
-        #                           ,scoring = 'neg_mean_squared_error'
-                                   ,scoring = top50_avg_loss
-                                   ,cv = custom_cv
-                                   ,refit = False
-                                   ,n_jobs=1
-                                   ,verbose=1
-                                   ,return_train_score=False
-                                   ,pre_dispatch = 1)
-        
-        joblib.dump(all_data.values, 'DataSet/temp_all_data')
-        all_data_values = joblib.load('DataSet/temp_all_data', mmap_mode='r+')
-        reggressor.fit(all_data_values,y_all_data)
-        
-        print('grid search result:')
-        print('best score:'+ str(reggressor.best_score_))
-        print('best params:'+ str(reggressor.best_params_))
-        print('detailed results:',report(reggressor.cv_results_))
-        rank_params = pd.DataFrame(columns=['Rank'
-                                            ,'CV_score'
-                                            ,'params'])
-        for rank in range(1,Params['topK_params']+1):
-            report_params(reggressor.cv_results_,rank,rank_params)
-              
         #####################
         # # Test: 测试获取评价结果
         #####################
         imp_print("Testing...",40)
-        for rank in range(Params['topK_params']):
-            temp_params = rank_params['params'][rank]
-            print('CV rank {} model:\n\
-                  params:{}'.format(rank+1,temp_params))
-            eval_df = evaluate_test(model=estimator,params=temp_params)
+
+        eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
         
-            print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
+        print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
             
-            for topk in eval_df['topk'].unique():
-                print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
+        for topk in eval_df['topk'].unique():
+            print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
     model_end = time.time()
        
     imp_print('Execution Time:')
@@ -275,6 +239,5 @@ def training():
     print("Modelling & Test data time cost: {}s".format(model_end - model_start))
 
 if __name__ == "__main__":
-    
     training()
     print ("Finished...")
