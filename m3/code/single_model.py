@@ -212,7 +212,7 @@ model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
                               bagging_freq = 5, feature_fraction = 0.2319,
                               feature_fraction_seed=9, bagging_seed=9,
                               min_data_in_leaf =6, min_sum_hessian_in_leaf = 11
-                              ,num_threads = multiprocessing.cpu_count())
+                              )
 #grid search params
 for algo in Params['algo']:
     imp_print(algo,20)
@@ -231,9 +231,10 @@ for algo in Params['algo']:
                                ,scoring = top50_avg_loss
                                ,cv = custom_cv
                                ,refit = False
-                               ,n_jobs=multiprocessing.cpu_count()
+                               ,n_jobs=1
                                ,verbose=1
-                               ,return_train_score=False)
+                               ,return_train_score=False
+                               ,pre_dispatch = 1)
     
     joblib.dump(all_data.values, 'DataSet/temp_all_data')
     all_data_values = joblib.load('DataSet/temp_all_data', mmap_mode='r+')
