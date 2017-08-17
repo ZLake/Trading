@@ -120,7 +120,7 @@ def training():
     read_start = time.time()
     # 数据格式 hdf5
     # Sample 100 rows of data to determine dtypes.
-    df_test = pd.read_hdf('DataSet/train_1331_1333.h5', nrows=10)
+    df_test = pd.read_hdf('DataSet/train_1200_1333.h5', nrows=10)
     float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
     float32_cols = {c: np.float32 for c in float_cols}
     chunk_size = 10**5
