@@ -123,11 +123,14 @@ def training():
     df_test = pd.read_hdf('DataSet/train_1331_1333.h5', nrows=100)
     float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
     float32_cols = {c: np.float32 for c in float_cols}
-    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5',engine='c', dtype=float32_cols)
-    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5',engine='c', dtype=float32_cols)
+    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
+    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
+#    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5',dtype=float32_cols)
+#    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5',dtype=float32_cols)
     # 选择数据时间段：todo
-    train = train_raw
-    test=test_raw
+#    train = train_raw
+#    test = test_raw
+#    del train_raw,test_raw
     #check the numbers of samples and features
     print("The train data size before dropping Id feature is : {} ".format(train.shape))
     print("The test data size before dropping Id feature is : {} ".format(test.shape))
