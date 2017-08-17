@@ -120,13 +120,13 @@ def training():
     read_start = time.time()
     # 数据格式 hdf5
     # Sample 100 rows of data to determine dtypes.
-    df_test = pd.read_hdf('DataSet/train_1200_1333.h5', nrows=100)
+    df_test = pd.read_hdf('DataSet/train_1331_1333.h5', nrows=10)
     float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
     float32_cols = {c: np.float32 for c in float_cols}
-    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
-    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
-#    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5',dtype=float32_cols)
-#    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5',dtype=float32_cols)
+#    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
+#    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=10000,dtype=float32_cols))
+    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c',dtype=float32_cols)
+    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c',dtype=float32_cols)
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
@@ -158,11 +158,13 @@ def training():
     ntest = test.shape[0]
     y_train = train[train.columns[0]].values
     y_test = test[test.columns[0]].values
-    all_data = pd.concat((train, test)).reset_index(drop=True)
-    y_all_data = all_data[all_data.columns[0]].values
-    all_data.drop(train.columns[0], axis=1, inplace=True)
-    del train,test
-    print("all_data size is : {}".format(all_data.shape))
+#    all_data = pd.concat((train, test)).reset_index(drop=True)
+#    y_all_data = all_data[all_data.columns[0]].values
+    train.drop(train.columns[0], axis=1, inplace=True)
+    test.drop(test.columns[0], axis=1, inplace=True)
+#    all_data.drop(train.columns[0], axis=1, inplace=True)
+#    del train,test
+#    print("all_data size is : {}".format(all_data.shape))
     # missing data
 #    all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
 #    all_data_na = all_data_na.drop(all_data_na[all_data_na == 0].index).sort_values(ascending=False)[:30]
@@ -180,9 +182,9 @@ def training():
     imp_print("Modeling...",40)
     model_start = time.time()
     # get the train and val and test data
-    train = all_data[:ntrain].values
-    test = all_data[ntrain:].values
-    del all_data
+    train = train.values
+    test = test.values
+#    del all_data
     ######
     # Lasso Regression
     ######
