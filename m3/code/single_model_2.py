@@ -51,32 +51,11 @@ def report_params(results,rank,rank_parmas):
                                             ,results['mean_test_score'][candidate]
                                             ,results['params'][candidate]]
 
-def top50_avg_loss(estimator, X, y):
-#    print(estimator.get_params())
-    y_pred = estimator.predict(X)
-    result_df = pd.DataFrame(columns=['csv_index'
-                                      ,'pred_avg'])
-    for csv_index in test_csvIndexs:
-#        print('y '+str(csv_index)+':'+ str(y[(test_csv_index==csv_index).values][:10]))
-        temp_df = pd.DataFrame()
-        temp_df['temp_y_pred'] = y_pred[(test_csv_index==csv_index).values]
-        temp_df['temp_y'] = y[(test_csv_index==csv_index).values]
-        temp_df_sorted = temp_df.sort_values("temp_y_pred",ascending = True)
-        temp_select = temp_df_sorted[:Params['topK']]['temp_y']
-#        print('temp_select len:'+ str(len(temp_select)))
-        result_df.loc[len(result_df)] = [str(csv_index),temp_select.mean()]
-    
-#    print(result_df)
-#    print(result_df['pred_avg'].mean())
-    result_list.append(result_df['pred_avg'].mean())
-    return -result_df['pred_avg'].mean()
-    
-
             
-def evaluate_test(model,train_values,y_train,test_values,y_test,test_csv_index,topks=[50,30,10]):
+def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
-    model.fit(train_values,y_train)
-    y_test_pred = model.predict(test_values)
+    model.fit(train,y_train)
+    y_test_pred = model.predict(test)
     ##### mse Evaluation
     mse = mean_squared_error(y_test_pred, y_test)
     print("Test mse score: {:.10f}".format(mse))
@@ -140,8 +119,8 @@ def training():
     imp_print("Data Loading...",40)
     read_start = time.time()
     # 数据格式 hdf5
-    train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
-    test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
+    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
+    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
     # 选择数据时间段：todo
     train = train_raw
     test=test_raw
@@ -175,6 +154,7 @@ def training():
     all_data = pd.concat((train, test)).reset_index(drop=True)
     y_all_data = all_data[all_data.columns[0]].values
     all_data.drop(train.columns[0], axis=1, inplace=True)
+    del train,test
     print("all_data size is : {}".format(all_data.shape))
     # missing data
     all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
@@ -193,8 +173,8 @@ def training():
     imp_print("Modeling...",40)
     model_start = time.time()
     # get the train and val and test data
-    train = all_data[:ntrain]
-    test = all_data[ntrain:]
+    train = all_data[:ntrain].values
+    test = all_data[ntrain:].values
     ######
     # Lasso Regression
     ######
@@ -231,10 +211,7 @@ def training():
         # # Test: 测试获取评价结果
         #####################
         imp_print("Testing...",40)
-        train_values = train.values
-        test_values = test.values
-        del train,test
-        eval_df = evaluate_test(estimator,train_values,y_train,test_values,y_test,test_csv_index)
+        eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
         
         print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
             
@@ -245,7 +222,7 @@ def training():
     imp_print('Execution Time:')
     print("Reading data time cost: {}s".format(read_end - read_start))
     print("Processing data time cost: {}s".format(proc_end - proc_start))
-    print("Modelling & Test data time cost: {}s".format(model_end - model_start))
+    print("Modeling & Test data time cost: {}s".format(model_end - model_start))
 
 if __name__ == "__main__":
     training()
