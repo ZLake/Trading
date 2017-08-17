@@ -124,8 +124,8 @@ def training():
     float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
     float32_cols = {c: np.float32 for c in float_cols}
     chunk_size = 10**5
-    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
+    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
+    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
 #    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c',dtype=float32_cols)
 #    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c',dtype=float32_cols)
     # 选择数据时间段：todo
