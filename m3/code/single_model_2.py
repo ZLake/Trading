@@ -119,8 +119,8 @@ def training():
     imp_print("Data Loading...",40)
     read_start = time.time()
     # 数据格式 hdf5
-    train_raw = pd.read_hdf('DataSet/train_1200_1333.h5')
-    test_raw = pd.read_hdf('DataSet/test_1200_1333.h5')
+    train_raw = pd.read_hdf('DataSet/train_1331_1333.h5')
+    test_raw = pd.read_hdf('DataSet/test_1331_1333.h5')
     # 选择数据时间段：todo
     train = train_raw
     test=test_raw
@@ -157,15 +157,15 @@ def training():
     del train,test
     print("all_data size is : {}".format(all_data.shape))
     # missing data
-    all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
-    all_data_na = all_data_na.drop(all_data_na[all_data_na == 0].index).sort_values(ascending=False)[:30]
-    missing_data = pd.DataFrame({'Missing Ratio' :all_data_na})
-    missing_data.head(20)
-    print("missing data column numbers:{}".format(missing_data.shape[0]))
-    if(missing_data.shape[0] == 0):
-        imp_print("no missing data, go to next step...")
-    else:
-        imp_print("Need filling missing data...")
+#    all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
+#    all_data_na = all_data_na.drop(all_data_na[all_data_na == 0].index).sort_values(ascending=False)[:30]
+#    missing_data = pd.DataFrame({'Missing Ratio' :all_data_na})
+#    missing_data.head(20)
+#    print("missing data column numbers:{}".format(missing_data.shape[0]))
+#    if(missing_data.shape[0] == 0):
+#        imp_print("no missing data, go to next step...")
+#    else:
+#        imp_print("Need filling missing data...")
     proc_end = time.time()
     #####################
     # Modeling: 建模
