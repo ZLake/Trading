@@ -175,6 +175,7 @@ def training():
     # get the train and val and test data
     train = all_data[:ntrain].values
     test = all_data[ntrain:].values
+    del all_data
     ######
     # Lasso Regression
     ######
