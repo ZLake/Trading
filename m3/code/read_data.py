@@ -82,8 +82,8 @@ def read(split_num=1331,dest='../input/'):
         os.makedirs("DataSet/")
     train_filename = "DataSet/"+"train_"+str(split_num)+"_"+str(max(files_list))+'.h5'
     test_filename = "DataSet/"+"test_"+str(split_num)+"_"+str(max(files_list))+'.h5'
-    train.to_hdf(train_filename,'train',format='table',append=False)
-    test.to_hdf(test_filename,'test',format='table',append=False)
+    train.to_hdf(train_filename,'train',append=False)
+    test.to_hdf(test_filename,'test',append=False)
     print("train data: " +train_filename)
     print("test  data: " +test_filename )
     imp_print2("Done",15)

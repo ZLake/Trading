@@ -25,6 +25,8 @@ import xgboost as xgb
 
 import time
 from sklearn.externals import joblib # solve OOM problem
+import gc
+
 
 #User defined functions
 def imp_print(info,slen=20):
@@ -112,7 +114,6 @@ def training():
     Params['topK'] = 50 # 选股个数
     Params['topK_params'] = 1 # 前k个参数用于实际测试 
     
-    result_list = []
     #####################
     # Read the data: 选择数据的时间段
     #####################
@@ -120,14 +121,14 @@ def training():
     read_start = time.time()
     # 数据格式 hdf5
     # Sample 100 rows of data to determine dtypes.
-    df_test = pd.read_hdf('DataSet/train_1200_1333.h5', nrows=10)
-    float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
-    float32_cols = {c: np.float32 for c in float_cols}
-    chunk_size = 10**5
-    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-#    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c',dtype=float32_cols)
-#    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c',dtype=float32_cols)
+#    df_test = pd.read_hdf('DataSet/train_1200_1333.h5', nrows=10)
+#    float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
+#    float32_cols = {c: np.float32 for c in float_cols}
+#    chunk_size = 10**5
+#    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
+#    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
+    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c')
+    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c')
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
@@ -148,7 +149,10 @@ def training():
     read_end = time.time()
     print("\nThe train data size after dropping Id feature is : {} ".format(train.shape)) 
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
-    # 
+    #
+    print('garbage collection:')
+    gc.collect()
+    print(gc.collect())
     #####################
     # Preprocess: 处理成训练和测试集合
     #####################
@@ -177,6 +181,10 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     proc_end = time.time()
+    #
+    print('garbage collection:')
+    gc.collect()
+    print(gc.collect())
     #####################
     # Modeling: 建模
     #####################
