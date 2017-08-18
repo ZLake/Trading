@@ -129,8 +129,8 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
-    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
+    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c')
+    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c')
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
@@ -188,7 +188,7 @@ def training():
                           ,max_features =1.0
                           ,random_state=rng
                           ,n_jobs = num_threads
-                          ,contamination = 0.1)
+                          )
     clf.fit(train.values)
     train_pred_outliers = clf.predict(train.values)
     # 去除train里的outlier
@@ -236,7 +236,7 @@ def training():
                                   feature_fraction_seed=9, bagging_seed=9,
                                   min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
                                   num_threads = num_threads,
-                                  reg_alpha=1, reg_lambda=1
+                                  reg_alpha=2, reg_lambda=1
                                   )
     #grid search params
     for algo in Params['algo']:
