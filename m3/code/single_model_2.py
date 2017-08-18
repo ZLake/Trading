@@ -129,8 +129,8 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c')
-    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c')
+    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
+    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
