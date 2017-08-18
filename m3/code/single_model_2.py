@@ -191,6 +191,7 @@ def training():
     clf.fit(train.values)
     y_pred_outliers = clf.predict(train.values)
     train = train[y_pred_outliers == 1]
+    print('outlier number:{}, percentage:{:.2f}%'.format((y_pred_outliers == -1).sum(),(y_pred_outliers == -1).sum()*100/len(train)))
     y_train = y_train[y_pred_outliers == 1]
     proc_end = time.time()
     #
