@@ -187,12 +187,21 @@ def training():
     clf = IsolationForest(max_samples=0.7
                           ,max_features =1.0
                           ,random_state=rng
-                          ,n_jobs = num_threads)
+                          ,n_jobs = num_threads
+                          ,contamination = 0.1)
     clf.fit(train.values)
-    y_pred_outliers = clf.predict(train.values)
-    train = train[y_pred_outliers == 1]
-    print('outlier number:{}, percentage:{:.2f}%'.format((y_pred_outliers == -1).sum(),(y_pred_outliers == -1).sum()*100/len(train)))
-    y_train = y_train[y_pred_outliers == 1]
+    train_pred_outliers = clf.predict(train.values)
+    # 去除train里的outlier
+    train = train[train_pred_outliers == 1]
+    print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
+    y_train = y_train[train_pred_outliers == 1]
+    # 去除test里的outlier
+#    test_pred_outliers = clf.predict(test.values)
+#    test = test[test_pred_outliers == 1]
+#    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
+#    y_test = y_test[test_pred_outliers == 1]
+#    test_csv_index = test_csv_index[test_pred_outliers == 1]
+ 
     proc_end = time.time()
     #
     print('garbage collection:')
@@ -226,7 +235,8 @@ def training():
                                   bagging_freq = 5, feature_fraction = 0.2319,
                                   feature_fraction_seed=9, bagging_seed=9,
                                   min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
-                                  num_threads = num_threads
+                                  num_threads = num_threads,
+                                  reg_alpha=1, reg_lambda=1
                                   )
     #grid search params
     for algo in Params['algo']:
