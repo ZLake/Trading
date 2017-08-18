@@ -13,11 +13,9 @@ from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
 from sklearn.pipeline import make_pipeline,Pipeline
 from sklearn.preprocessing import RobustScaler,StandardScaler
 from sklearn.metrics import mean_squared_error
-
 from sklearn.model_selection import GridSearchCV,PredefinedSplit
-
 from sklearn.metrics import make_scorer
-
+from sklearn.ensemble import IsolationForest
 import multiprocessing
 
 import lightgbm as lgb
@@ -113,7 +111,11 @@ def training():
         }
     Params['topK'] = 50 # 选股个数
     Params['topK_params'] = 1 # 前k个参数用于实际测试 
-    
+    rng = np.random.RandomState(42)
+    if multiprocessing.cpu_count() >=60:
+        num_threads = multiprocessing.cpu_count()//2
+    else:
+        num_threads = multiprocessing.cpu_count()
     #####################
     # Read the data: 选择数据的时间段
     #####################
@@ -127,8 +129,8 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
-    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
+    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c')
+    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c')
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
@@ -180,6 +182,16 @@ def training():
 #        imp_print("no missing data, go to next step...")
 #    else:
 #        imp_print("Need filling missing data...")
+    # Outlier Detection
+    # fit the model
+    clf = IsolationForest(max_samples=0.7
+                          ,max_features =1.0
+                          ,random_state=rng
+                          ,n_jobs = num_threads)
+    clf.fit(train.values)
+    y_pred_outliers = clf.predict(train.values)
+    train = train[y_pred_outliers == 1]
+    y_train = y_train[y_pred_outliers == 1]
     proc_end = time.time()
     #
     print('garbage collection:')
@@ -200,14 +212,11 @@ def training():
     scaler = StandardScaler()
     #scaler = RobustScaler()
     lasso = Pipeline(steps=[('scaler',scaler),
-                          ('lasso',Lasso(alpha = 0.01,random_state=1))])
+                          ('lasso',Lasso(alpha = 0.01,random_state=rng))])
     ######
     # LightGBM
     ######
-    if multiprocessing.cpu_count() >=60:
-        num_threads = multiprocessing.cpu_count()//2
-    else:
-        num_threads = multiprocessing.cpu_count()
+
     print('number of thread in training lgb:{}'.format(num_threads))
         
     model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
