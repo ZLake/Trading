@@ -191,6 +191,7 @@ def training():
                           ,max_features =1.0
                           ,random_state=rng
                           ,n_jobs = 1
+                          ,n_estimators = 1
                           )
     clf.fit(train.values)
     train_pred_outliers = clf.predict(train.values)
