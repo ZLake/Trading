@@ -8,6 +8,7 @@ Created on Sun Aug 13 22:38:21 2017
 import numpy as np # linear algebra
 import scipy as sp
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import dask.dataframe as dd
 
 from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
 from sklearn.pipeline import make_pipeline,Pipeline
@@ -127,10 +128,12 @@ def training():
 #    float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
 #    float32_cols = {c: np.float32 for c in float_cols}
 #    chunk_size = 10**5
-#    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-#    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1200_1333.h5',iterator=True, chunksize=chunk_size,dtype=float32_cols))
-    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
-    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
+#    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size))
+#    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size))
+    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c',low_memory = True)
+    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c',low_memory = True)
+#    train= dd.read_csv('../input/*.csv')
+#    test = dd.read_csv('../input/*.csv')
     # 选择数据时间段：todo
 #    train = train_raw
 #    test = test_raw
