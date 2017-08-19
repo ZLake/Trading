@@ -130,8 +130,8 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size))
-    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c',low_memory = True)
-    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c',low_memory = True)
+    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
+    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
 #    train= dd.read_csv('../input/*.csv')
 #    test = dd.read_csv('../input/*.csv')
     # 选择数据时间段：todo
@@ -186,7 +186,7 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     # Outlier Detection
-    # fit the model
+#    fit the model
     clf = IsolationForest(max_samples=0.7
                           ,max_features =1.0
                           ,random_state=rng
@@ -233,13 +233,13 @@ def training():
     print('number of thread in training lgb:{}'.format(num_threads))
         
     model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
-                                  learning_rate=0.05, n_estimators=720,
+                                  learning_rate=0.02, n_estimators=1500,
                                   max_bin = 55, bagging_fraction = 0.8,
                                   bagging_freq = 5, feature_fraction = 0.2319,
                                   feature_fraction_seed=9, bagging_seed=9,
                                   min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
                                   num_threads = num_threads,
-                                  reg_alpha=2, reg_lambda=1
+                                  reg_alpha=1, reg_lambda=1,
                                   )
     #grid search params
     for algo in Params['algo']:
