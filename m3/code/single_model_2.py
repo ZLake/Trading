@@ -130,8 +130,8 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size))
-    train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c',low_memory = True)
-    test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c',low_memory = True)
+    train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c',low_memory = True)
+    test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c',low_memory = True)
 #    train= dd.read_csv('../input/*.csv')
 #    test = dd.read_csv('../input/*.csv')
     # 选择数据时间段：todo
