@@ -187,25 +187,25 @@ def training():
 #        imp_print("Need filling missing data...")
     # Outlier Detection
 #    fit the model
-    clf = IsolationForest(max_samples=0.7
-                          ,max_features =1.0
-                          ,random_state=rng
-                          ,n_jobs = 1
-                          ,n_estimators = 1
-                          )
-    clf.fit(train.values)
-    train_pred_outliers = clf.predict(train.values)
-    # 去除train里的outlier
-    train = train[train_pred_outliers == 1]
-    print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
-    y_train = y_train[train_pred_outliers == 1]
-    # 去除test里的outlier
-    test_pred_outliers = clf.predict(test.values)
-    test = test[test_pred_outliers == 1]
-    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
-    y_test = y_test[test_pred_outliers == 1]
-    test_csv_index = test_csv_index[test_pred_outliers == 1]
- 
+#    clf = IsolationForest(max_samples=0.7
+#                          ,max_features =1.0
+#                          ,random_state=rng
+#                          ,n_jobs = 1
+#                          ,n_estimators = 1
+#                          )
+#    clf.fit(train.values)
+#    train_pred_outliers = clf.predict(train.values)
+#    # 去除train里的outlier
+#    train = train[train_pred_outliers == 1]
+#    print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
+#    y_train = y_train[train_pred_outliers == 1]
+#    # 去除test里的outlier
+#    test_pred_outliers = clf.predict(test.values)
+#    test = test[test_pred_outliers == 1]
+#    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
+#    y_test = y_test[test_pred_outliers == 1]
+#    test_csv_index = test_csv_index[test_pred_outliers == 1]
+# 
     proc_end = time.time()
     #
     print('garbage collection:')
