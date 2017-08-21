@@ -101,7 +101,7 @@ def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_ind
         clf = IsolationForest(max_samples=0.7
                           ,max_features =1.0
                           ,random_state=rng
-                          ,n_jobs = 1
+                          ,n_jobs = num_threads
                           ,n_estimators = 100
                           )
     elif(clf_name == 'LOF'):
@@ -147,7 +147,7 @@ def training():
     ## define global parameters
     Params = {}
     Params['Outlier_Detector'] = 'IF' # None,IsolationForest,LOF
-    Params['algo'] = ['model_lgb'] # 可选参数：lasso,model_lgb
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
