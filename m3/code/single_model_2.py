@@ -147,7 +147,7 @@ def training():
     #####################
     ## define global parameters
     Params = {}
-    Params['Outlier_Detector'] = 'IF' # None,IsolationForest,LOF
+    Params['Outlier_Detector'] = 'IF' # None,IF:IsolationForest,LOF
     Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
