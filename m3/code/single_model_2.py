@@ -93,9 +93,10 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
     
 def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_index,apply_on_test = False,num_threads = 1):
     rng = np.random.RandomState(42)
+    print('Outlier Detection nthreads:{}'.format(num_threads))
     if(clf_name == 'None'):
         print('None outlier detector is applied:')
-    elif(clf_name == 'IsolationForest'):
+    elif(clf_name == 'IF'):
         print('IsolationForest is applied:')
         clf = IsolationForest(max_samples=0.7
                           ,max_features =1.0
@@ -145,7 +146,7 @@ def training():
     #####################
     ## define global parameters
     Params = {}
-    Params['Outlier_Detector'] = 'None' # None,IsolationForest,LOF
+    Params['Outlier_Detector'] = 'IF' # None,IsolationForest,LOF
     Params['algo'] = ['model_lgb'] # 可选参数：lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
@@ -244,30 +245,11 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     # Outlier Detection
-#    fit the model
     train,y_train,test,y_test,test_csv_index = outlier_detection(Params['Outlier_Detector'],''
                                                                  ,train,y_train,test,y_test,test_csv_index
                                                                  ,apply_on_test = True
                                                                  ,num_threads = num_threads)
             
-#    clf = IsolationForest(max_samples=0.7
-#                          ,max_features =1.0
-#                          ,random_state=rng
-#                          ,n_jobs = 1
-#                          ,n_estimators = 1
-#                          )
-#    clf.fit(train.values)
-#    train_pred_outliers = clf.predict(train.values)
-#    # 去除train里的outlier
-#    train = train[train_pred_outliers == 1]
-#    print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
-#    y_train = y_train[train_pred_outliers == 1]
-#    # 去除test里的outlier
-#    test_pred_outliers = clf.predict(test.values)
-#    test = test[test_pred_outliers == 1]
-#    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
-#    y_test = y_test[test_pred_outliers == 1]
-#    test_csv_index = test_csv_index[test_pred_outliers == 1]
 # 
     proc_end = time.time()
     #
