@@ -94,7 +94,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
 def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_index,apply_on_test = False,num_threads = 1):
     rng = np.random.RandomState(42)
     if(num_threads > 30):
-        num_threads = 4
+        num_threads = 3
     print('Outlier Detection nthreads:{}'.format(num_threads))
     if(clf_name == 'None'):
         print('None outlier detector is applied:')
