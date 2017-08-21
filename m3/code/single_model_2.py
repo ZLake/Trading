@@ -200,11 +200,11 @@ def training():
     print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
     y_train = y_train[train_pred_outliers == 1]
     # 去除test里的outlier
-#    test_pred_outliers = clf.predict(test.values)
-#    test = test[test_pred_outliers == 1]
-#    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
-#    y_test = y_test[test_pred_outliers == 1]
-#    test_csv_index = test_csv_index[test_pred_outliers == 1]
+    test_pred_outliers = clf.predict(test.values)
+    test = test[test_pred_outliers == 1]
+    print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(train)))
+    y_test = y_test[test_pred_outliers == 1]
+    test_csv_index = test_csv_index[test_pred_outliers == 1]
  
     proc_end = time.time()
     #
