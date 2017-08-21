@@ -106,7 +106,8 @@ def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_ind
                           )
     elif(clf_name == 'LOF'):
         print('LOF is applied:')
-        clf = LocalOutlierFactor(n_neighbors=20)
+        clf = LocalOutlierFactor(n_neighbors=20
+                                 ,n_jobs = num_threads)
     else:
         print('Invalid outlier detector, take it as None')
     
