@@ -91,17 +91,17 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
                                         ,temp_min,temp_max,temp_simple_avg]
     return eval_df
     
-def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_index,apply_on_test = False):
+def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_index,apply_on_test = False,num_threads = 1):
     rng = np.random.RandomState(42)
     if(clf_name == 'None'):
         print('None outlier detector is applied:')
     elif(clf_name == 'IsolationForest'):
         print('IsolationForest is applied:')
-        clf = IsolationForest(max_samples=0.8
+        clf = IsolationForest(max_samples=0.7
                           ,max_features =1.0
                           ,random_state=rng
                           ,n_jobs = 1
-                          ,n_estimators = 1
+                          ,n_estimators = 100
                           )
     elif(clf_name == 'LOF'):
         print('LOF is applied:')
@@ -145,7 +145,7 @@ def training():
     #####################
     ## define global parameters
     Params = {}
-    Params['Outlier_Detector'] = 'IsolationForest' # None,IsolationForest,LOF
+    Params['Outlier_Detector'] = 'None' # None,IsolationForest,LOF
     Params['algo'] = ['model_lgb'] # 可选参数：lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
@@ -212,9 +212,10 @@ def training():
     print("\nThe train data size after dropping Id feature is : {} ".format(train.shape)) 
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
     #
-    print('garbage collection:')
     gc.collect()
-    print(gc.collect())
+    if(gc.collect()>0):
+        print('garbage collection:')
+        print(gc.collect())
     #####################
     # Preprocess: 处理成训练和测试集合
     #####################
@@ -246,7 +247,8 @@ def training():
 #    fit the model
     train,y_train,test,y_test,test_csv_index = outlier_detection(Params['Outlier_Detector'],''
                                                                  ,train,y_train,test,y_test,test_csv_index
-                                                                 ,apply_on_test = True)
+                                                                 ,apply_on_test = True
+                                                                 ,num_threads = num_threads)
             
 #    clf = IsolationForest(max_samples=0.7
 #                          ,max_features =1.0
@@ -269,9 +271,10 @@ def training():
 # 
     proc_end = time.time()
     #
-    print('garbage collection:')
     gc.collect()
-    print(gc.collect())
+    if(gc.collect()>0):
+        print('garbage collection:')
+        print(gc.collect())
     #####################
     # Modeling: 建模
     #####################
