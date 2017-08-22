@@ -45,26 +45,13 @@ def outlier_detection(train_name_raw,test_name_raw
         rng = np.random.RandomState(42)
         if(num_threads > 30):
             num_threads = 2
-            print('Outlier Detection nthreads:{}'.format(num_threads))
-        elif(clf_name == 'IF'):
-            print('IsolationForest is applied:')
-            clf = IsolationForest(max_samples=0.7
-                              ,max_features =1.0
-                              ,random_state=rng
-                              ,n_jobs = num_threads
-                              ,n_estimators = 100
-                              ,contamination=0.1
-                              )
-            clf.set_params(**clf_params['IF_Params'])
-        elif(clf_name == 'LOF'):
+        print('Outlier Detection nthreads:{}'.format(num_threads))
+
+        if(clf_name =='LOF'):
             print('LOF is applied:')
             clf = LocalOutlierFactor(n_neighbors=20
                                      ,n_jobs = num_threads)
             clf.set_params(**clf_params['LOF_Params'])
-        else:
-            print('Invalid outlier detector, take it as None')
-            return train,y_train,test,y_test,test_csv_index
-        if(clf_name =='LOF'):
             # fit the model
             train_pred_outliers = clf.fit_predict(train.values)
             train_pred_outliers_df = pd.DataFrame()
@@ -76,6 +63,15 @@ def outlier_detection(train_name_raw,test_name_raw
             test_pred_outliers_df['LOF_outliers'] = test_pred_outliers
             test_pred_outliers_df.to_hdf('DataSet/'+test_name_proc,'test_LOF_outliers',append=False)
         elif(clf_name == 'IF'):
+            print('IsolationForest is applied:')
+            clf = IsolationForest(max_samples=0.7
+                              ,max_features =1.0
+                              ,random_state=rng
+                              ,n_jobs = num_threads
+                              ,n_estimators = 100
+                              ,contamination=0.1
+                              )
+            clf.set_params(**clf_params['IF_Params'])
             # fit the model
             clf.fit(train.values)
             # train
@@ -91,7 +87,7 @@ def outlier_detection(train_name_raw,test_name_raw
             
             temp = train_pred_values.copy()
             temp.sort()
-            threshold = temp[round(np.ceil(len(temp)*clf_params['IF_Params']['contamination']))]
+            threshold = temp[int(np.ceil(len(temp)*clf_params['IF_Params']['contamination']))]
             train_pred_outliers = (train_pred_values>threshold).astype(int) * 2 - 1
             test_pred_outliers = (test_pred_values>threshold).astype(int) * 2 - 1
 #            train_pred_outliers = clf.predict(train.values)
@@ -109,6 +105,8 @@ def outlier_detection(train_name_raw,test_name_raw
             train_pred_outliers = (train_pred_values>=threshold).astype(int) * 2 - 1
             test_pred_outliers = (test_pred_values>=threshold).astype(int) * 2 - 1
         elif(clf_name == 'LOF'):
+            print('train_pred_outliers from:'+'DataSet/'+train_name_proc)
+            print('test_pred_outliers from:'+'DataSet/'+test_name_proc)
             train_pred_outliers = pd.read_hdf('DataSet/'+train_name_proc,engine = 'c').values[:,0]
             test_pred_outliers = pd.read_hdf('DataSet/'+test_name_proc,engine = 'c').values[:,0]
 
