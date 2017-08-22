@@ -16,8 +16,7 @@ from sklearn.preprocessing import RobustScaler,StandardScaler
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import GridSearchCV,PredefinedSplit
 from sklearn.metrics import make_scorer
-from sklearn.ensemble import IsolationForest
-from sklearn.neighbors import LocalOutlierFactor
+
 
 import multiprocessing
 
@@ -27,6 +26,8 @@ import xgboost as xgb
 import time
 from sklearn.externals import joblib # solve OOM problem
 import gc
+
+from outlier_detection import outlier_detection
 
 
 #User defined functions
@@ -91,66 +92,28 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
                                         ,temp_min,temp_max,temp_simple_avg]
     return eval_df
     
-def outlier_detection(clf_name,clf_params,train,y_train,test,y_test,test_csv_index,apply_on_test = False,num_threads = 1):
-    rng = np.random.RandomState(42)
-    if(num_threads > 30):
-        num_threads = 2
-    print('Outlier Detection nthreads:{}'.format(num_threads))
-    if(clf_name == 'None'):
-        print('None outlier detector is applied:')
-    elif(clf_name == 'IF'):
-        print('IsolationForest is applied:')
-        clf = IsolationForest(max_samples=0.7
-                          ,max_features =1.0
-                          ,random_state=rng
-                          ,n_jobs = num_threads
-                          ,n_estimators = 100
-                          )
-    elif(clf_name == 'LOF'):
-        print('LOF is applied:')
-        clf = LocalOutlierFactor(n_neighbors=20
-                                 ,n_jobs = num_threads)
-    else:
-        print('Invalid outlier detector, take it as None')
-    
-    if(clf_name =='LOF'):
-        # fit the model
-        train_pred_outliers = clf.fit_predict(train.values)
-        # 去除train里的outlier
-        train = train[train_pred_outliers == 1]
-        print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
-        y_train = y_train[train_pred_outliers == 1]
-        if(apply_on_test):
-            # 去除test里的outlier
-            test_pred_outliers = clf.fit_predict(test.values)
-            test = test[test_pred_outliers == 1]
-            print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(test)))
-            y_test = y_test[test_pred_outliers == 1]
-            test_csv_index = test_csv_index[test_pred_outliers == 1]
-    elif(clf_name != 'LOF' and clf_name != 'None'):
-        # fit the model
-        clf.fit(train.values)
-        train_pred_outliers = clf.predict(train.values)
-        # 去除train里的outlier
-        train = train[train_pred_outliers == 1]
-        print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
-        y_train = y_train[train_pred_outliers == 1]
-        if(apply_on_test):
-            # 去除test里的outlier
-            test_pred_outliers = clf.predict(test.values)
-            test = test[test_pred_outliers == 1]
-            print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(test)))
-            y_test = y_test[test_pred_outliers == 1]
-            test_csv_index = test_csv_index[test_pred_outliers == 1]            
-            
-    return train,y_train,test,y_test,test_csv_index
     
 def training():
     #####################
     ## define global parameters
     Params = {}
-    Params['Outlier_Detector'] = 'IF' # None,IF:IsolationForest,LOF
-    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
+    ########## Outlier detection params
+    IF_Params = {'max_samples':0.7
+                 ,'n_estimators':100
+                 ,'contamination':0.1} # 0.1
+    LOF_Params = {'n_neighbors':20
+                  ,'algorithm':'ball_tree'
+                  ,'leaf_size':30
+                  ,'metric':'minkowski'
+                  ,'p':2
+                  ,'contamination':0.1
+                    }
+    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
+                                  ,'apply_on_test':True
+                                  ,'IF_Params':IF_Params
+                                  ,'LOF_Params':LOF_Params} 
+    ########## Modeling parmas
+    Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
@@ -167,8 +130,8 @@ def training():
     #    ,'reg_alpha' : [1,2,6]
     #    ,'reg_lambda' : [1,2,6]
         }
+    ########## Evaluation params
     Params['topK'] = 50 # 选股个数
-    Params['topK_params'] = 1 # 前k个参数用于实际测试 
     rng = np.random.RandomState(42)
     if multiprocessing.cpu_count() >=60:
         num_threads = multiprocessing.cpu_count()//2
@@ -188,11 +151,14 @@ def training():
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size))
     if(multiprocessing.cpu_count() >=60):
-        train= pd.read_hdf('DataSet/train_1200_1333.h5',engine = 'c')
-        test = pd.read_hdf('DataSet/test_1200_1333.h5',engine = 'c')
+        train_name_raw = 'train_1200_1333.h5'
+        test_name_raw ='test_1200_1333.h5'
     else:
-        train= pd.read_hdf('DataSet/train_1331_1333.h5',engine = 'c')
-        test = pd.read_hdf('DataSet/test_1331_1333.h5',engine = 'c')
+        train_name_raw = 'train_1331_1333.h5'
+        test_name_raw ='test_1331_1333.h5'
+    train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c')
+    test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c')
+
 #    train= dd.read_csv('../input/*.csv')
 #    test = dd.read_csv('../input/*.csv')
     # 选择数据时间段：todo
@@ -248,9 +214,10 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     # Outlier Detection
-    train,y_train,test,y_test,test_csv_index = outlier_detection(Params['Outlier_Detector'],''
+    train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
+                                                                 ,Params['Outlier_Detector']['algo'],Params['Outlier_Detector']
                                                                  ,train,y_train,test,y_test,test_csv_index
-                                                                 ,apply_on_test = True
+                                                                 ,apply_on_test = Params['Outlier_Detector']['apply_on_test']
                                                                  ,num_threads = num_threads)
             
 # 
@@ -281,7 +248,6 @@ def training():
     ######
 
     print('number of thread in training lgb:{}'.format(num_threads))
-        
     model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
                                   learning_rate=0.02, n_estimators=1500,
                                   max_bin = 55, bagging_fraction = 0.8,
@@ -294,11 +260,7 @@ def training():
     #grid search params
     for algo in Params['algo']:
         imp_print(algo,20)
-        param_grid = Params[algo + '_grid_params']
-        estimator = eval(algo)
-        # set estimator parameters 
-        
-        # get csv_index in the test set for gridsearch evaluation
+        estimator = eval(algo)        
         #####################
         # # Test: 测试获取评价结果
         #####################
