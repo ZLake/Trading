@@ -31,9 +31,6 @@ from simple_functions import imp_print
 from outlier_detection import outlier_detection
 from evaluation import evaluate_test
 
-
-def process_result(eval_df):
-
     
 def training():
     #####################
