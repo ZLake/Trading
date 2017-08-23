@@ -27,71 +27,13 @@ import time
 from sklearn.externals import joblib # solve OOM problem
 import gc
 
+from simple_functions import imp_print
 from outlier_detection import outlier_detection
+from evaluation import evaluate_test
 
 
-#User defined functions
-def imp_print(info,slen=20):
-    print ("="*slen)
-    print (info)
-    print ("="*slen)
+def process_result(eval_df):
 
-# Utility function to report best scores
-def report(results, n_top=3):
-    for i in range(1, n_top + 1):
-        candidates = np.flatnonzero(results['rank_test_score'] == i)
-        for candidate in candidates:
-            print("Model with rank: {0}".format(i))
-            print("Mean validation score: {0:.10f} (std: {1:.10f})".format(
-                  results['mean_test_score'][candidate],
-                  results['std_test_score'][candidate]))
-            print("Parameters: {0}".format(results['params'][candidate]))
-            print("")
-
-def report_params(results,rank,rank_parmas):
-    candidates = np.flatnonzero(results['rank_test_score'] == rank)
-    for candidate in candidates:
-        rank_parmas.loc[len(rank_parmas)] = [rank
-                                            ,results['mean_test_score'][candidate]
-                                            ,results['params'][candidate]]
-
-            
-def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
-    # 每天计算分数最低top50，平均后再按天平均
-    model.fit(train,y_train)
-    y_test_pred = model.predict(test)
-    ##### mse Evaluation
-    mse = mean_squared_error(y_test_pred, y_test)
-    print("Test mse score: {:.10f}".format(mse))
-    ##### stock Evaluation
-    # take top 50 stocks and calculate avg(label)
-    test_withPred = pd.DataFrame()
-    test_withPred['y_test'] = y_test
-    test_withPred["pred_test"] = y_test_pred 
-    test_withPred.insert(0, 'csv_index', test_csv_index.values)
-    csv_indexs = test_withPred['csv_index'].unique()
-    # 每个index单独评分
-    eval_df = pd.DataFrame(columns=['csv_index'
-                                    ,'topk'
-                                    ,'pred_avg'
-                                    ,'pred_std'
-                                    ,'pred_min'
-                                    ,'pred_max'
-                                    ,'simple_avg'])
-    for csv_index in csv_indexs:
-        temp_test = test_withPred[test_withPred['csv_index'] == csv_index]
-        temp_test_sorted = temp_test.sort_values("pred_test",ascending = True)
-        for topk in topks:
-            temp_select = temp_test_sorted[:topk]['y_test']
-            temp_avgLabel = temp_select.mean()
-            temp_stdLabel = temp_select.std()
-            temp_min = temp_select.min()
-            temp_max = temp_select.max()
-            temp_simple_avg = temp_test[['y_test']].mean()
-            eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
-                                        ,temp_min,temp_max,temp_simple_avg]
-    return eval_df
-    
     
 def training():
     #####################
@@ -271,6 +213,27 @@ def training():
             
         for topk in eval_df['topk'].unique():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
+        # store result
+        final_result = pd.DataFrame(columns=['date'                 #记录日期
+                                             ,'train_period'
+                                             ,'test_period'
+                                             ,'OD algo'
+                                             ,'OD params'
+                                             ,'estimator algo'
+                                             ,'estimator input params'
+                                             ,'estimator all params'
+                                             ,'top50_avg'
+                                             ,'top50_std'
+                                             ,'top30_avg'
+                                             ,'top30_std'
+                                             ,'top10_avg'
+                                             ,'top10_std'
+                                             ,'top50_under039_avg'
+                                             ,'top30_under039_avg'
+                                             ,'top10_under039_avg'
+                                             ,'details'              #存eval_df
+                                             ,'simple_avg'])
+    
     model_end = time.time()
        
     imp_print('Execution Time:')
