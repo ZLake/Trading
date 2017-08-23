@@ -37,7 +37,7 @@ def training():
     ## define global parameters
     Params = {}
     ########## Outlier detection params
-    IF_Params = {'max_samples':0.7
+    IF_Params = {'max_samples':0.8
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
     LOF_Params = {'n_neighbors':20
