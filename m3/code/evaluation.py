@@ -9,6 +9,11 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 
+import os
+from time import localtime, strftime
+import warnings
+
+
 def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
     model.fit(train,y_train)
@@ -50,4 +55,71 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
                                         ,temp_simple_avg]
     return eval_df
 
+def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,theme):
+    # store result
+    temp_result = []   
+    daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
+    #get time 
+    temp_result.append(daytime)
+    temp_result.append(train_name_raw.strip('.h5'))
+    temp_result.append(test_name_raw.strip('.h5'))
+    temp_result.append(Params['Outlier_Detector']['algo'])
+    if(Params['Outlier_Detector']['algo'] == 'None'):
+        temp_result.append('None')
+        temp_result.append(False)
+    else:
+        temp_result.append(Params['Outlier_Detector'][Params['Outlier_Detector']['algo'] + '_'+'Params'])
+        temp_result.append(Params['Outlier_Detector']['apply_on_test'])
+    temp_result.append(algo)    #'estimator algo'
+    temp_result.append('')      #'estimator input params'
+    temp_result.append(estimator.get_params)
+    # performance metric
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].mean())
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].std())
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].mean())
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].std())
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].mean())
+    temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].std())
+    temp_result.append(eval_df['under_039'][eval_df['topk']==50].mean())
+    temp_result.append(eval_df['under_039'][eval_df['topk']==30].mean())
+    temp_result.append(eval_df['under_039'][eval_df['topk']==10].mean())
+    temp_result.append(eval_df)
+    temp_result.append(eval_df['simple_avg'].mean())
+    #读取之前的记录
+    # Generate file name for storage
+    file_name = train_name_raw.strip('.h5').strip('train_')
+    full_path = 'Result/'+file_name+'/'+theme+'__' + file_name+'_result.h5'
+    if not os.path.exists('Result/'+file_name):
+        os.makedirs('Result/'+file_name)
+    if os.path.exists(full_path):
+        print('Appending result to existing file: ' + full_path)
+        final_result = pd.read_hdf(full_path,engine = 'c')
+        final_result.loc[len(final_result)] = temp_result
+    else:
+        print('Writting result to new file:' + full_path)
+        final_result = pd.DataFrame(columns=['date'                 #记录日期
+                                         ,'train_period'
+                                         ,'test_period'
+                                         ,'OD algo'
+                                         ,'OD params'
+                                         ,'OD apply_on_test'
+                                         ,'estimator algo'
+                                         ,'estimator input params'
+                                         ,'estimator all params'
+                                         ,'top50_avg'
+                                         ,'top50_std'
+                                         ,'top30_avg'
+                                         ,'top30_std'
+                                         ,'top10_avg'
+                                         ,'top10_std'
+                                         ,'top50_under039_avg'
+                                         ,'top30_under039_avg'
+                                         ,'top10_under039_avg'
+                                         ,'details'              #存eval_df
+                                         ,'simple_avg']) 
+        final_result.loc[len(final_result)] = temp_result
+    with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            final_result.to_hdf(full_path,'result',append=False)
+    #加上新纪录并保存
     

@@ -28,16 +28,19 @@ import xgboost as xgb
 import time
 import gc
 import os
+import warnings
+
 
 from simple_functions import imp_print
 from outlier_detection import outlier_detection
-from evaluation import evaluate_test
+from evaluation import evaluate_test,store_result
 
     
 def training():
     #####################
     ## define global parameters
     Params = {}
+    Params['theme'] = 'ODTest'# 本次运行的目的
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
@@ -55,6 +58,7 @@ def training():
                                   ,'LOF_Params':LOF_Params} 
     ########## Modeling parmas
     Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
+    ######## 注意： 因为内存不够问题，lasso的StandardScaler(copy=False)，会对train 做inplace 替换！！！
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
@@ -217,59 +221,7 @@ def training():
             
         for topk in eval_df['topk'].unique():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
-        # store result
-        final_result = pd.DataFrame(columns=['date'                 #记录日期
-                                             ,'train_period'
-                                             ,'test_period'
-                                             ,'OD algo'
-                                             ,'OD params'
-                                             ,'OD apply_on_test'
-                                             ,'estimator algo'
-                                             ,'estimator input params'
-                                             ,'estimator all params'
-                                             ,'top50_avg'
-                                             ,'top50_std'
-                                             ,'top30_avg'
-                                             ,'top30_std'
-                                             ,'top10_avg'
-                                             ,'top10_std'
-                                             ,'top50_under039_avg'
-                                             ,'top30_under039_avg'
-                                             ,'top10_under039_avg'
-                                             ,'details'              #存eval_df
-                                             ,'simple_avg'])
-        temp_result = []    
-        #get time 
-        temp_result.append(strftime("%Y-%m-%d %H:%M:%S", localtime()))
-        temp_result.append(train_name_raw.strip('.h5'))
-        temp_result.append(test_name_raw.strip('.h5'))
-        temp_result.append(Params['Outlier_Detector']['algo'])
-        if(Params['Outlier_Detector']['algo'] == 'None'):
-            temp_result.append('None')
-        else:
-            temp_result.append(Params[Params['algo'] + '_'+'Params'])
-        temp_result.append(Params['Outlier_Detector']['apply_on_test'])
-        temp_result.append(algo)    #'estimator algo'
-        temp_result.append('')      #'estimator input params'
-        temp_result.append(estimator.get_params)
-        # performance metric
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].mean())
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].std())
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].mean())
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].std())
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].mean())
-        temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].std())
-        temp_result.append(eval_df['under_039'][eval_df['topk']==50].mean())
-        temp_result.append(eval_df['under_039'][eval_df['topk']==30].mean())
-        temp_result.append(eval_df['under_039'][eval_df['topk']==10].mean())
-        temp_result.append(eval_df)
-        temp_result.append(eval_df['simple_avg'].mean())
-        #读取之前的记录
-        # Generate file name for storage
-        file_name = train_name_raw.strip('.h5').strip('train_')
-        if os.path.exists('Result/'+file_name+'/'+file_name+'_result.h5'):
-            exist_result_df = pd.read_hdf('Result/'+file_name+'/'+file_name+'_result.h5',engine = 'c')
-        #加上新纪录并保存
+        store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'])
         
     model_end = time.time()
        
