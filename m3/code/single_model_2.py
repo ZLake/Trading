@@ -154,7 +154,8 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     # Outlier Detection
-    train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
+    if(Params['Outlier_Detector']['algo']!='None'):
+        train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
                                                                  ,Params['Outlier_Detector']['algo'],Params['Outlier_Detector']
                                                                  ,train,y_train,test,y_test,test_csv_index
                                                                  ,apply_on_test = Params['Outlier_Detector']['apply_on_test']
@@ -179,11 +180,12 @@ def training():
     ######
     # Lasso Regression
     ######
-    scaler = StandardScaler()
+    scaler = StandardScaler(copy=True)
     #scaler = RobustScaler()
     lasso = Pipeline(steps=[('scaler',scaler),
                           ('lasso',Lasso(alpha = 0.01,random_state=rng
                                          ,copy_X = False))])
+
     ######
     # LightGBM
     ######
@@ -246,6 +248,7 @@ def training():
         temp_result.append(Params['Outlier_Detector']['apply_on_test'])
         temp_result.append(algo)    #'estimator algo'
         temp_result.append('')      #'estimator input params'
+        temp_result.append(estimator.get_params)
     
     model_end = time.time()
        
