@@ -237,6 +237,12 @@ def training():
         temp_result.append(strftime("%Y-%m-%d %H:%M:%S", localtime()))
         temp_result.append(train_name_raw.strip('.h5'))
         temp_result.append(test_name_raw.strip('.h5'))
+        temp_result.append(Params['Outlier_Detector']['algo'])
+        if(Params['Outlier_Detector']['algo'] == 'None'):
+            temp_result.append('None')
+        else:
+            temp_result.append(Params[Params['algo'] + '_'+'Params'])
+        temp_result.append(Params['Outlier_Detector']['apply_on_test'])
         
     
     model_end = time.time()
