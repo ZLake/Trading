@@ -37,7 +37,7 @@ def training():
     ## define global parameters
     Params = {}
     ########## Outlier detection params
-    IF_Params = {'max_samples':0.8
+    IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
     LOF_Params = {'n_neighbors':20
@@ -47,12 +47,12 @@ def training():
                   ,'p':2
                   ,'contamination':0.1
                     }
-    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
+    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
                                   ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
                                   ,'LOF_Params':LOF_Params} 
     ########## Modeling parmas
-    Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
@@ -216,6 +216,7 @@ def training():
                                              ,'test_period'
                                              ,'OD algo'
                                              ,'OD params'
+                                             ,'OD apply_on_test'
                                              ,'estimator algo'
                                              ,'estimator input params'
                                              ,'estimator all params'
