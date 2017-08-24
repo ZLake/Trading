@@ -19,6 +19,7 @@ from sklearn.metrics import make_scorer
 
 
 import multiprocessing
+from time import localtime, strftime
 
 import lightgbm as lgb
 import xgboost as xgb
@@ -231,6 +232,12 @@ def training():
                                              ,'top10_under039_avg'
                                              ,'details'              #存eval_df
                                              ,'simple_avg'])
+        temp_result = []    
+        #get time 
+        temp_result.append(strftime("%Y-%m-%d %H:%M:%S", localtime()))
+        temp_result.append(train_name_raw.strip('.h5'))
+        temp_result.append(test_name_raw.strip('.h5'))
+        
     
     model_end = time.time()
        
