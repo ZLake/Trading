@@ -182,7 +182,8 @@ def training():
     scaler = StandardScaler()
     #scaler = RobustScaler()
     lasso = Pipeline(steps=[('scaler',scaler),
-                          ('lasso',Lasso(alpha = 0.01,random_state=rng))])
+                          ('lasso',Lasso(alpha = 0.01,random_state=rng
+                                         ,copy_X = False))])
     ######
     # LightGBM
     ######
@@ -243,7 +244,8 @@ def training():
         else:
             temp_result.append(Params[Params['algo'] + '_'+'Params'])
         temp_result.append(Params['Outlier_Detector']['apply_on_test'])
-        
+        temp_result.append(algo)    #'estimator algo'
+        temp_result.append('')      #'estimator input params'
     
     model_end = time.time()
        

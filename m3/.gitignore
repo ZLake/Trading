@@ -1,3 +1,5 @@
 Dataset
 __pycache__
 *.pyc
+Result
+*.out
