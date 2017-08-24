@@ -5,6 +5,9 @@ Created on Sun Aug 13 22:38:21 2017
 
 @author: LinZhang
 """
+import sys
+sys.path.insert(0, 'functions')
+
 import numpy as np # linear algebra
 import scipy as sp
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
@@ -35,11 +38,18 @@ from simple_functions import imp_print
 from outlier_detection import outlier_detection
 from evaluation import evaluate_test,store_result
 
-
-def training():
+def get_params():
     #####################
     ## define global parameters
     Params = {}
+    # data files
+    if(multiprocessing.cpu_count() >=60):
+        Params['train_name_raw'] = 'train_1200_1333.h5'
+        Params['test_name_raw'] = 'test_1200_1333.h5'
+    else:
+        Params['train_name_raw'] ='train_1331_1333.h5'
+        Params['test_name_raw'] = 'test_1331_1333.h5'
+    # theme 
     Params['theme'] = 'ODTest'# 本次运行的目的
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
@@ -77,6 +87,10 @@ def training():
         }
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
+    return Params
+
+def training():
+    Params = get_params()
     rng = np.random.RandomState(42)
     if multiprocessing.cpu_count() >=60:
         num_threads = multiprocessing.cpu_count()//2
@@ -95,12 +109,9 @@ def training():
 #    chunk_size = 10**5
 #    train =pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/train_1331_1333.h5',iterator=True, chunksize=chunk_size))
 #    test = pd.concat(chunck_df for chunck_df in pd.read_hdf('DataSet/test_1331_1333.h5',iterator=True, chunksize=chunk_size))
-    if(multiprocessing.cpu_count() >=60):
-        train_name_raw = 'train_1200_1333.h5'
-        test_name_raw ='test_1200_1333.h5'
-    else:
-        train_name_raw = 'train_1331_1333.h5'
-        test_name_raw ='test_1331_1333.h5'
+
+    train_name_raw = Params['train_name_raw']
+    test_name_raw =Params['test_name_raw']
     train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c')
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c')
 
