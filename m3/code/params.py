@@ -33,7 +33,7 @@ def get_params():
                   ,'contamination':0.1
                     }
     Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
-                                  ,'apply_on_test':False
+                                  ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
                                   ,'LOF_Params':LOF_Params}
     ########## Modeling parmas

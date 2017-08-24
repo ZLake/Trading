@@ -62,7 +62,7 @@ def read(split_num=1331,dest='../input/'):
         temp_train.insert(0, 'csv_index', files_list[i])
         train_list.append(temp_train)
         print('Training set now processing: '+ str(files_list[i])+".csv, sample number: "+ str(len(temp_train)))
-    train = pd.concat(train_list)
+    train = pd.concat(train_list,ignore_index=True)
     
     imp_print2("Test set",3)
     test = pd.DataFrame()
@@ -72,7 +72,7 @@ def read(split_num=1331,dest='../input/'):
         temp_test.insert(0, 'csv_index', files_list[j])
         test_list.append(temp_test)
         print('Testing  set now processing: '+ str(files_list[j])+".csv, sample number: "+ str(len(temp_test)))
-    test = pd.concat(test_list)
+    test = pd.concat(test_list,ignore_index=True)
 
     imp_print2("End Reading Data",11)
     print ("train set size:{}".format(train.shape))
