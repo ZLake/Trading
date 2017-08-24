@@ -169,6 +169,7 @@ def training():
                                   )
     #grid search params
     for algo in Params['algo']:
+        temp_time_start = time.time()
         imp_print(algo,20)
         estimator = eval(algo)
         #####################
@@ -181,8 +182,10 @@ def training():
 
         for topk in eval_df['topk'].unique():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
-        store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'])
-
+        temp_time_end = time.time()
+        cost_time = (temp_time_end-temp_time_start)/60                # min
+        store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'],cost_time)
+        
     model_end = time.time()
 
     imp_print('Execution Time:')

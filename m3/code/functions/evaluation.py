@@ -55,12 +55,13 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
                                         ,temp_simple_avg]
     return eval_df
 
-def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,theme):
+def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
     # store result
     temp_result = []   
     daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
     #get time 
     temp_result.append(daytime)
+    temp_result.append(cost_time)
     temp_result.append(train_name_raw.strip('.h5'))
     temp_result.append(test_name_raw.strip('.h5'))
     temp_result.append(Params['Outlier_Detector']['algo'])
@@ -98,6 +99,7 @@ def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,them
     else:
         print('Writting result to new file:' + full_path)
         final_result = pd.DataFrame(columns=['date'                 #记录日期
+                                         ,'cost_time(min)'
                                          ,'train_period'
                                          ,'test_period'
                                          ,'OD algo'
