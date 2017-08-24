@@ -52,7 +52,7 @@ def training():
                                   ,'IF_Params':IF_Params
                                   ,'LOF_Params':LOF_Params} 
     ########## Modeling parmas
-    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
+    Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
