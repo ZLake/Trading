@@ -73,7 +73,12 @@ def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,them
         temp_result.append(Params['Outlier_Detector']['apply_on_test'])
     temp_result.append(algo)    #'estimator algo'
     temp_result.append('')      #'estimator input params'
-    temp_result.append(estimator.get_params)
+    if(algo == 'lasso'):
+        temp_result.append(dict(estimator.get_params()['steps']))
+    elif(algo == 'model_lgb'):
+        temp_result.append(estimator.get_params())
+    else:
+        temp_result.append({'info':'unknown'})
     # performance metric
     temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].mean())
     temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].std())
