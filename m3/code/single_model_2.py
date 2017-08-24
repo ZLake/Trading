@@ -16,6 +16,7 @@ from sklearn.preprocessing import RobustScaler,StandardScaler
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import GridSearchCV,PredefinedSplit
 from sklearn.metrics import make_scorer
+from sklearn.externals import joblib # solve OOM problem
 
 
 import multiprocessing
@@ -25,8 +26,8 @@ import lightgbm as lgb
 import xgboost as xgb
 
 import time
-from sklearn.externals import joblib # solve OOM problem
 import gc
+import os
 
 from simple_functions import imp_print
 from outlier_detection import outlier_detection
@@ -122,10 +123,10 @@ def training():
     print("\nThe train data size after dropping Id feature is : {} ".format(train.shape)) 
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
     #
-    gc.collect()
-    if(gc.collect()>0):
-        print('garbage collection:')
-        print(gc.collect())
+#    gc.collect()
+#    if(gc.collect()>0):
+#        print('garbage collection:')
+#        print(gc.collect())
     #####################
     # Preprocess: 处理成训练和测试集合
     #####################
@@ -160,14 +161,16 @@ def training():
                                                                  ,train,y_train,test,y_test,test_csv_index
                                                                  ,apply_on_test = Params['Outlier_Detector']['apply_on_test']
                                                                  ,num_threads = num_threads)
+    else:
+        print('None outlier detection is applied...')
             
 # 
     proc_end = time.time()
     #
-    gc.collect()
-    if(gc.collect()>0):
-        print('garbage collection:')
-        print(gc.collect())
+#    gc.collect()
+#    if(gc.collect()>0):
+#        print('garbage collection:')
+#        print(gc.collect())
     #####################
     # Modeling: 建模
     #####################
@@ -180,7 +183,7 @@ def training():
     ######
     # Lasso Regression
     ######
-    scaler = StandardScaler(copy=True)
+    scaler = StandardScaler(copy=False)
     #scaler = RobustScaler()
     lasso = Pipeline(steps=[('scaler',scaler),
                           ('lasso',Lasso(alpha = 0.01,random_state=rng
@@ -249,7 +252,25 @@ def training():
         temp_result.append(algo)    #'estimator algo'
         temp_result.append('')      #'estimator input params'
         temp_result.append(estimator.get_params)
-    
+        # performance metric
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].mean())
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==50].std())
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].mean())
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==30].std())
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].mean())
+        temp_result.append(eval_df['pred_avg'][eval_df['topk']==10].std())
+        temp_result.append(eval_df['under_039'][eval_df['topk']==50].mean())
+        temp_result.append(eval_df['under_039'][eval_df['topk']==30].mean())
+        temp_result.append(eval_df['under_039'][eval_df['topk']==10].mean())
+        temp_result.append(eval_df)
+        temp_result.append(eval_df['simple_avg'].mean())
+        #读取之前的记录
+        # Generate file name for storage
+        file_name = train_name_raw.strip('.h5').strip('train_')
+        if os.path.exists('Result/'+file_name+'/'+file_name+'_result.h5'):
+            exist_result_df = pd.read_hdf('Result/'+file_name+'/'+file_name+'_result.h5',engine = 'c')
+        #加上新纪录并保存
+        
     model_end = time.time()
        
     imp_print('Execution Time:')

@@ -30,9 +30,6 @@ def proc_name(file_name_raw,clf_params):
 def outlier_detection(train_name_raw,test_name_raw
                       ,clf_name,clf_params,train,y_train,test,y_test,test_csv_index
                       ,apply_on_test = False,num_threads = 1):
-    if(clf_name == 'None'):
-        return train,y_train,test,y_test,test_csv_index
-
     # Generate file name for storage
     if not os.path.exists("DataSet/"+train_name_raw.strip('.h5').strip('train_')+'/'):
         os.makedirs("DataSet/"+train_name_raw.strip('.h5').strip('train_')+'/')
