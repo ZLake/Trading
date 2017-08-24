@@ -11,6 +11,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from subprocess import check_output
 import os, errno
 import sys
+import gc
 
 
 def imp_print(info,slen=20):
@@ -83,7 +84,9 @@ def read(split_num=1331,dest='../input/'):
     train_filename = "DataSet/"+"train_"+str(split_num)+"_"+str(max(files_list))+'.h5'
     test_filename = "DataSet/"+"test_"+str(split_num)+"_"+str(max(files_list))+'.h5'
     train.to_hdf(train_filename,'train',append=False)
+    del train
     test.to_hdf(test_filename,'test',append=False)
+    del test
     print("train data: " +train_filename)
     print("test  data: " +test_filename )
     imp_print2("Done",15)
