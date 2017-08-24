@@ -35,7 +35,7 @@ from simple_functions import imp_print
 from outlier_detection import outlier_detection
 from evaluation import evaluate_test,store_result
 
-    
+
 def training():
     #####################
     ## define global parameters
@@ -52,10 +52,10 @@ def training():
                   ,'p':2
                   ,'contamination':0.1
                     }
-    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
+    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
                                   ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
-                                  ,'LOF_Params':LOF_Params} 
+                                  ,'LOF_Params':LOF_Params}
     ########## Modeling parmas
     Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
     ######## 注意： 因为内存不够问题，lasso的StandardScaler(copy=False)，会对train 做inplace 替换！！！
@@ -124,7 +124,7 @@ def training():
     test.drop(test.columns[0:2], axis = 1, inplace = True)
     #check again the data size after dropping the 'Id' variable
     read_end = time.time()
-    print("\nThe train data size after dropping Id feature is : {} ".format(train.shape)) 
+    print("\nThe train data size after dropping Id feature is : {} ".format(train.shape))
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
     #
 #    gc.collect()
@@ -167,8 +167,8 @@ def training():
                                                                  ,num_threads = num_threads)
     else:
         print('None outlier detection is applied...')
-            
-# 
+
+#
     proc_end = time.time()
     #
 #    gc.collect()
@@ -210,21 +210,21 @@ def training():
     #grid search params
     for algo in Params['algo']:
         imp_print(algo,20)
-        estimator = eval(algo)        
+        estimator = eval(algo)
         #####################
         # # Test: 测试获取评价结果
         #####################
         imp_print("Testing...",40)
         eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
-        
+
         print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
-            
+
         for topk in eval_df['topk'].unique():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
         store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'])
-        
+
     model_end = time.time()
-       
+
     imp_print('Execution Time:')
     print("Reading data time cost: {}s".format(read_end - read_start))
     print("Processing data time cost: {}s".format(proc_end - proc_start))
