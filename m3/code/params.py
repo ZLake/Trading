@@ -19,7 +19,7 @@ def get_params():
     else:
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
-    # theme 
+    # theme
     Params['theme'] = 'ODTest'# 本次运行的目的
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
@@ -37,7 +37,7 @@ def get_params():
                                   ,'IF_Params':IF_Params
                                   ,'LOF_Params':LOF_Params}
     ########## Modeling parmas
-    Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
     ######## 注意： 因为内存不够问题，lasso的StandardScaler(copy=False)，会对train 做inplace 替换！！！
     # lasso params
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]
