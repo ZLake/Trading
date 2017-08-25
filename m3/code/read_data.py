@@ -59,12 +59,15 @@ def read(split_num=1331,dest='../input/',train_test = 0):
     if(train_test == 0):
         do_train = True
         do_test = True
+        print('Generate both train and test set...')
     elif(train_test == 1):
         do_train = True
         do_test = False
+        print('Generate only train set...')
     elif(train_test == 2):
         do_train = False
         do_test = True
+        print('Generate only test set...')
     # train
     if(do_train):
         imp_print2("Train set",3)
