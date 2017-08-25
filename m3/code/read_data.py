@@ -33,7 +33,7 @@ def argParser():
     elif len(sys.argv)==4:
         args["split_num"] = int(sys.argv[1])
         args["dest"] = sys.argv[2]
-        args["train_test"] = sys.argv[3]
+        args["train_test"] = int(sys.argv[3])
     elif len(sys.argv)>4:
         raise Exception("more then 2 args, only split_num and dest are required")
 
