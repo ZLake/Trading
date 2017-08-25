@@ -7,6 +7,7 @@ Created on Thu Aug 24 14:51:13 2017
 """
 import multiprocessing
 from sklearn.preprocessing import RobustScaler,StandardScaler
+from sklearn.model_selection import ParameterGrid
 
 def get_params():
     #####################
@@ -32,7 +33,7 @@ def get_params():
                   ,'p':2
                   ,'contamination':0.1
                     }
-    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
+    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
                                   ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
                                   ,'LOF_Params':LOF_Params}
@@ -58,3 +59,15 @@ def get_params():
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
     return Params
+
+def paramGridSearch(params):
+    params_combs = ParameterGrid(params)
+    return params_combs
+
+
+if __name__ == "__main__":
+    params = {'max_samples':[0.7,0.8]
+                 ,'n_estimators':[100]
+                 ,'contamination':[0.1]} # 0.1
+    paramGridSearch()
+    print ("Finished...")

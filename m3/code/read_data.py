@@ -12,7 +12,7 @@ from subprocess import check_output
 import os, errno
 import sys
 import gc
-
+import numpy as np
 
 def imp_print(info,slen=20):
     print ("="*slen)
@@ -68,13 +68,20 @@ def read(split_num=1331,dest='../input/',train_test = 0):
         do_train = False
         do_test = True
         print('Generate only test set...')
+    # set data types
+#    df_test = pd.read_csv(dest+str(files_list[files_list.index(split_num)])+".csv",header=None, nrows=10)
+#    float_cols = [c for c in df_test if df_test[c].dtype == "float64"]
+#    float32_cols = {c: np.float32 for c in float_cols}
     # train
     if(do_train):
         imp_print2("Train set",3)
         train = pd.DataFrame()
         train_list = []
         for i in range(files_list.index(split_num)+1):
-            temp_train = pd.read_csv(dest+str(files_list[i])+".csv",header=None)
+            temp_train = pd.read_csv(dest+str(files_list[i])+".csv"
+                                     ,header=None
+#                                     ,dtype = float32_cols
+                                     )
             temp_train.insert(0, 'csv_index', files_list[i])
             train_list.append(temp_train)
             print('Training set now processing: '+ str(files_list[i])+".csv, sample number: "+ str(len(temp_train)))
@@ -85,7 +92,10 @@ def read(split_num=1331,dest='../input/',train_test = 0):
         test = pd.DataFrame()
         test_list = []
         for j in range(files_list.index(split_num)+1,len(files_list)):
-            temp_test = pd.read_csv(dest+str(files_list[j])+".csv",header=None)
+            temp_test = pd.read_csv(dest+str(files_list[j])+".csv"
+                                    ,header=None
+#                                    ,dtype = float32_cols
+                                    )
             temp_test.insert(0, 'csv_index', files_list[j])
             test_list.append(temp_test)
             print('Testing  set now processing: '+ str(files_list[j])+".csv, sample number: "+ str(len(temp_test)))

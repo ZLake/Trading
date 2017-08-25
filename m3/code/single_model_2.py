@@ -61,8 +61,8 @@ def training():
 
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
-    train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c')
-    test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c')
+    train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
+    test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
 
 #    train= dd.read_csv('../input/*.csv')
 #    test = dd.read_csv('../input/*.csv')
