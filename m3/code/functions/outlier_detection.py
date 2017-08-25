@@ -109,13 +109,13 @@ def outlier_detection(train_name_raw,test_name_raw
 
     # 去除train里的outlier
     print('Train Set: outlier number:{}, percentage:{:.2f}%'.format((train_pred_outliers == -1).sum(),(train_pred_outliers == -1).sum()*100/len(train)))
-    train.drop(train[train_pred_outliers != 1].index, axis = 0,inplace=True)
+    train.drop(np.where(train_pred_outliers != 1)[0], axis = 0,inplace=True)
 #    train = train[train_pred_outliers == 1]
     y_train = y_train[train_pred_outliers == 1]
     if(apply_on_test):
         # 去除test里的outlier
         print('Test Set: outlier number:{}, percentage:{:.2f}%'.format((test_pred_outliers == -1).sum(),(test_pred_outliers == -1).sum()*100/len(test)))
-        test.drop(test[test_pred_outliers != 1].index, axis = 0, inplace=True)
+        test.drop(np.where(test_pred_outliers != 1)[0], axis = 0, inplace=True)
 #        test = test[test_pred_outliers == 1]
         y_test = y_test[test_pred_outliers == 1]
         test_csv_index = test_csv_index[test_pred_outliers == 1]         
