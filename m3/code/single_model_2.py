@@ -119,7 +119,6 @@ def training():
 #    else:
 #        imp_print("Need filling missing data...")
     # Outlier Detection
-    od_param_combs = 
     if(Params['Outlier_Detector']['algo']!='None'):
         train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
                                                                  ,Params['Outlier_Detector']['algo'],Params['Outlier_Detector']
