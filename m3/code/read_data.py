@@ -39,11 +39,12 @@ def argParser():
 
     return args
 
-def read(split_num=1331,dest='../input/',only_test = False):
+def read(split_num=1331,dest='../input/',train_test = 0):
     """
     split_num:data <= split_num.csv => training set
               data >  spllt_num.csv => testing  set
     dest: dir path contains all csv files
+    train_test: 0, generate train and test set;1,only train set;2,only test set
     """
     imp_print2("Running Info",15)
     print("CSV data files loc:"+dest)
@@ -55,8 +56,17 @@ def read(split_num=1331,dest='../input/',only_test = False):
     files_list.sort()
     
     imp_print2("Start Reading Data")
+    if(train_test == 0):
+        do_train = True
+        do_test = True
+    elif(train_test == 1):
+        do_train = True
+        do_test = False
+    elif(train_test == 2):
+        do_train = False
+        do_test = True
     # train
-    if(not only_test):
+    if(do_train):
         imp_print2("Train set",3)
         train = pd.DataFrame()
         train_list = []
@@ -67,34 +77,35 @@ def read(split_num=1331,dest='../input/',only_test = False):
             print('Training set now processing: '+ str(files_list[i])+".csv, sample number: "+ str(len(temp_train)))
         train = pd.concat(train_list,ignore_index=True)
     # test
-    imp_print2("Test set",3)
-    test = pd.DataFrame()
-    test_list = []
-    for j in range(files_list.index(split_num)+1,len(files_list)):
-        temp_test = pd.read_csv(dest+str(files_list[j])+".csv",header=None)
-        temp_test.insert(0, 'csv_index', files_list[j])
-        test_list.append(temp_test)
-        print('Testing  set now processing: '+ str(files_list[j])+".csv, sample number: "+ str(len(temp_test)))
-    test = pd.concat(test_list,ignore_index=True)
+    if(do_test):
+        imp_print2("Test set",3)
+        test = pd.DataFrame()
+        test_list = []
+        for j in range(files_list.index(split_num)+1,len(files_list)):
+            temp_test = pd.read_csv(dest+str(files_list[j])+".csv",header=None)
+            temp_test.insert(0, 'csv_index', files_list[j])
+            test_list.append(temp_test)
+            print('Testing  set now processing: '+ str(files_list[j])+".csv, sample number: "+ str(len(temp_test)))
+        test = pd.concat(test_list,ignore_index=True)
 
     imp_print2("End Reading Data",11)
-    if(not only_test):
+    if(do_train):
         print ("train set size:{}".format(train.shape))
-        
-    print ("test set size:{}".format(test.shape))
+    if(do_test):
+        print ("test set size:{}".format(test.shape))
     imp_print2("Saving Data",13)
     if not os.path.exists("DataSet/"):
         os.makedirs("DataSet/")
-    if(not only_test):
+    if(do_train):
         train_filename = "DataSet/"+"train_"+str(split_num)+"_"+str(max(files_list))+'.h5'
         train.to_hdf(train_filename,'train',append=False)
         print("train data: " +train_filename)
         del train
-        
-    test_filename = "DataSet/"+"test_"+str(split_num)+"_"+str(max(files_list))+'.h5'
-    test.to_hdf(test_filename,'test',append=False)
-    del test
-    print("test  data: " +test_filename )
+    if(do_test):
+        test_filename = "DataSet/"+"test_"+str(split_num)+"_"+str(max(files_list))+'.h5'
+        test.to_hdf(test_filename,'test',append=False)
+        del test
+        print("test  data: " +test_filename )
     imp_print2("Done",15)
 
 if __name__ == "__main__":
