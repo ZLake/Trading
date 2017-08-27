@@ -69,12 +69,12 @@ def training():
     print("The train data size before dropping Id feature is : {} ".format(train.shape))
     print("The test data size before dropping Id feature is : {} ".format(test.shape))
     #Save the 'csv_index' column
-    train_csv_index = train[train.columns[0]]
-    test_csv_index = test[train.columns[0]]
+    train_csv_index = train[train.columns[0]].copy()
+    test_csv_index = test[train.columns[0]].copy()
     #Save the 'Id' column
-    train_ID = train[train.columns[1]]
-    test_ID = test[train.columns[1]]
-#Now drop the  'csv_index' & 'Id' colum since it's unnecessary for  the prediction process.
+    train_ID = train[train.columns[1]].copy()
+    test_ID = test[train.columns[1]].copy()
+    #Now drop the  'csv_index' & 'Id' colum since it's unnecessary for  the prediction process.
     train.drop(train.columns[0:2], axis = 1, inplace = True)
     test.drop(test.columns[0:2], axis = 1, inplace = True)
     #check again the data size after dropping the 'Id' variable
