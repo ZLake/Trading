@@ -81,7 +81,21 @@ def training():
     read_end = time.time()
     print("\nThe train data size after dropping Id feature is : {} ".format(train.shape))
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
-
+    #####################
+    # Preprocess: 处理成训练和测试集合
+    #####################
+    imp_print("Data Processing...",40)
+    proc_start = time.time()
+    #############
+    ntrain = train.shape[0]
+    ntest = test.shape[0]
+    y_train = train[train.columns[0]].values
+    y_test = test[test.columns[0]].values
+#    all_data = pd.concat((train, test)).reset_index(drop=True)
+#    y_all_data = all_data[all_data.columns[0]].values
+    train.drop(train.columns[0], axis=1, inplace=True)
+    test.drop(test.columns[0], axis=1, inplace=True)
+    
     print('Data loaded...')
     time.sleep(3600)
 
