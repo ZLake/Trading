@@ -151,6 +151,10 @@ def training():
         temp_time_end = time.time()
         cost_time = (temp_time_end-temp_time_start)/60                # min
 
+    del train,test
+    if(gc.collect()>0):
+    print('garbage collection:')
+    print(gc.collect())
     print('Data loaded...')
     time.sleep(3600)
 

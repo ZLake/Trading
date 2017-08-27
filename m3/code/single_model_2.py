@@ -99,8 +99,8 @@ def training():
     #############
     ntrain = train.shape[0]
     ntest = test.shape[0]
-    y_train = train[train.columns[0]].values
-    y_test = test[test.columns[0]].values
+    y_train = train[train.columns[0]].copy().values
+    y_test = test[test.columns[0]].copy().values
 #    all_data = pd.concat((train, test)).reset_index(drop=True)
 #    y_all_data = all_data[all_data.columns[0]].values
     train.drop(train.columns[0], axis=1, inplace=True)
