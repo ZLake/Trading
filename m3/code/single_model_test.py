@@ -96,6 +96,15 @@ def training():
     train.drop(train.columns[0], axis=1, inplace=True)
     test.drop(test.columns[0], axis=1, inplace=True)
     
+    if(Params['Outlier_Detector']['algo']!='None'):
+        train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
+                                                                 ,Params['Outlier_Detector']['algo'],Params['Outlier_Detector']
+                                                                 ,train,y_train,test,y_test,test_csv_index
+                                                                 ,apply_on_test = Params['Outlier_Detector']['apply_on_test']
+                                                                 ,num_threads = num_threads)
+    else:
+        print('None outlier detection is applied...')
+
     print('Data loaded...')
     time.sleep(3600)
 
