@@ -48,7 +48,7 @@ def training():
         num_threads = multiprocessing.cpu_count()
         
     for i in range(2):
-        imp_print('{}th Round'.format(i))
+        imp_print('{}th Round'.format(i),60)
         #####################
         # Read the data: 选择数据的时间段
         #####################
@@ -84,21 +84,25 @@ def training():
         read_end = time.time()
         print("\nThe train data size after dropping Id feature is : {} ".format(train.shape))
         print("The test data size after dropping Id feature is : {} ".format(test.shape))
+        
+        print('garbage collection:')
+        print(gc.collect())
         #####################
         # Preprocess: 处理成训练和测试集合
         #####################
         imp_print("Data Processing...",40)
         proc_start = time.time()
         #############
-        ntrain = train.shape[0]
-        ntest = test.shape[0]
+#        ntrain = train.shape[0]
+#        ntest = test.shape[0]
         y_train = train[train.columns[0]].copy().values
         y_test = test[test.columns[0]].copy().values
     #    all_data = pd.concat((train, test)).reset_index(drop=True)
     #    y_all_data = all_data[all_data.columns[0]].values
         train.drop(train.columns[0], axis=1, inplace=True)
         test.drop(test.columns[0], axis=1, inplace=True)
-        
+        print('garbage collection:')
+        print(gc.collect())
         if(Params['Outlier_Detector']['algo']!='None'):
             train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
                                                                      ,Params['Outlier_Detector']['algo'],Params['Outlier_Detector']
@@ -113,6 +117,8 @@ def training():
         # get the train and val and test data
         train = train.values
         test = test.values
+        print('garbage collection:')
+        print(gc.collect())
     #    del all_data
         ######
         # Lasso Regression
@@ -153,11 +159,9 @@ def training():
                 print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
             temp_time_end = time.time()
             cost_time = (temp_time_end-temp_time_start)/60                # min
-    
-        del train,test
-        if(gc.collect()>0):
             print('garbage collection:')
             print(gc.collect())
+        
         print('Data loaded...')
     time.sleep(3600)
 

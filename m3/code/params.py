@@ -25,7 +25,7 @@ def get_params():
     # theme
     Params['theme'] = 'ODTest'# 本次运行的目的
     ########## Outlier detection params
-    IF_Params = {'max_samples':0.7
+    IF_Params = {'max_samples':0.9
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
     IF_Grid_Params = {'max_samples':[0.7,0.8]}

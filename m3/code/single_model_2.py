@@ -86,19 +86,17 @@ def training():
     read_end = time.time()
     print("\nThe train data size after dropping Id feature is : {} ".format(train.shape))
     print("The test data size after dropping Id feature is : {} ".format(test.shape))
-    #
-#    gc.collect()
-#    if(gc.collect()>0):
-#        print('garbage collection:')
-#        print(gc.collect())
+    
+    print('garbage collection:{}'.format(gc.collect()))
+
     #####################
     # Preprocess: 处理成训练和测试集合
     #####################
     imp_print("Data Processing...",40)
     proc_start = time.time()
     #############
-    ntrain = train.shape[0]
-    ntest = test.shape[0]
+#    ntrain = train.shape[0]
+#    ntest = test.shape[0]
     y_train = train[train.columns[0]].copy().values
     y_test = test[test.columns[0]].copy().values
 #    all_data = pd.concat((train, test)).reset_index(drop=True)
@@ -118,6 +116,8 @@ def training():
 #        imp_print("no missing data, go to next step...")
 #    else:
 #        imp_print("Need filling missing data...")
+
+    print('garbage collection:{}'.format(gc.collect()))
     # Outlier Detection
     if(Params['Outlier_Detector']['algo']!='None'):
         train,y_train,test,y_test,test_csv_index = outlier_detection(train_name_raw,test_name_raw
@@ -143,6 +143,8 @@ def training():
     # get the train and val and test data
     train = train.values
     test = test.values
+    print('garbage collection:{}'.format(gc.collect()))
+
 #    del all_data
     ######
     # Lasso Regression
@@ -186,6 +188,8 @@ def training():
         cost_time = (temp_time_end-temp_time_start)/60                # min
         store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'],cost_time)
         
+        print('garbage collection:{}'.format(gc.collect()))
+    
     model_end = time.time()
 
     imp_print('Execution Time:')
