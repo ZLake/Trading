@@ -153,8 +153,8 @@ def training():
 
     del train,test
     if(gc.collect()>0):
-    print('garbage collection:')
-    print(gc.collect())
+        print('garbage collection:')
+        print(gc.collect())
     print('Data loaded...')
     time.sleep(3600)
 
