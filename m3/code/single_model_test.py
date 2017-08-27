@@ -64,7 +64,6 @@ def training():
     test_name_raw =Params['test_name_raw']
     train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    print('Data loaded...')
     
     #check the numbers of samples and features
     print("The train data size before dropping Id feature is : {} ".format(train.shape))
@@ -75,6 +74,15 @@ def training():
     #Save the 'Id' column
     train_ID = train[train.columns[1]]
     test_ID = test[train.columns[1]]
+#Now drop the  'csv_index' & 'Id' colum since it's unnecessary for  the prediction process.
+    train.drop(train.columns[0:2], axis = 1, inplace = True)
+    test.drop(test.columns[0:2], axis = 1, inplace = True)
+    #check again the data size after dropping the 'Id' variable
+    read_end = time.time()
+    print("\nThe train data size after dropping Id feature is : {} ".format(train.shape))
+    print("The test data size after dropping Id feature is : {} ".format(test.shape))
+
+    print('Data loaded...')
     time.sleep(3600)
 
 if __name__ == "__main__":
