@@ -65,6 +65,16 @@ def training():
     train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
     print('Data loaded...')
+    
+    #check the numbers of samples and features
+    print("The train data size before dropping Id feature is : {} ".format(train.shape))
+    print("The test data size before dropping Id feature is : {} ".format(test.shape))
+    #Save the 'csv_index' column
+    train_csv_index = train[train.columns[0]]
+    test_csv_index = test[train.columns[0]]
+    #Save the 'Id' column
+    train_ID = train[train.columns[1]]
+    test_ID = test[train.columns[1]]
     time.sleep(3600)
 
 if __name__ == "__main__":
