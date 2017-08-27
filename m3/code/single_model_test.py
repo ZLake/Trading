@@ -104,6 +104,52 @@ def training():
                                                                  ,num_threads = num_threads)
     else:
         print('None outlier detection is applied...')
+    
+    imp_print("Modeling...",40)
+    model_start = time.time()
+    # get the train and val and test data
+    train = train.values
+    test = test.values
+#    del all_data
+    ######
+    # Lasso Regression
+    ######
+    scaler = StandardScaler(copy=False)
+    #scaler = RobustScaler()
+    lasso = Pipeline(steps=[('scaler',scaler),
+                          ('lasso',Lasso(alpha = 0.01,random_state=rng
+                                         ,copy_X = False))])
+
+    ######
+    # LightGBM
+    ######
+
+    print('number of thread in training lgb:{}'.format(num_threads))
+    model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
+                                  learning_rate=0.02, n_estimators=1500,
+                                  max_bin = 55, bagging_fraction = 0.8,
+                                  bagging_freq = 5, feature_fraction = 0.2319,
+                                  feature_fraction_seed=9, bagging_seed=9,
+                                  min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
+                                  num_threads = num_threads,
+                                  reg_alpha=1, reg_lambda=1,
+                                  )
+    #grid search params
+    for algo in Params['algo']:
+        temp_time_start = time.time()
+        imp_print(algo,20)
+        estimator = eval(algo)
+        #####################
+        # # Test: 测试获取评价结果
+        #####################
+        imp_print("Testing...",40)
+        eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
+        print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
+
+        for topk in eval_df['topk'].unique():
+            print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
+        temp_time_end = time.time()
+        cost_time = (temp_time_end-temp_time_start)/60                # min
 
     print('Data loaded...')
     time.sleep(3600)
