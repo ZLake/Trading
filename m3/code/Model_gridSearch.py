@@ -200,7 +200,7 @@ def training():
                 cost_time = (temp_time_end-temp_time_start)/60                # min
                 store_result(Params,algo_grid_param,algo,eval_df,estimator
                              ,train_name_raw,test_name_raw,Params['theme'],cost_time)
-                
+                del estimator
                 print('garbage collection:{}'.format(gc.collect()))
                 #update done info for grid search:algo
                 update_params_combs(Params['theme'],train_name_raw
