@@ -171,7 +171,7 @@ def training():
             # get algo param grid
             algo_Grid_Params = Params[algo+'_grid_params']
             algo_param_combs = load_params_combs(Params['theme']
-                                                ,'OD{}_Model'.format(OD_row['NO.'])
+                                                ,'OD_{}_Model'.format(OD_row['NO.'])
                                                 ,train_name_raw
                                                 ,algo_Grid_Params
                                                 ,continue_mode = (Params['Algo_continue'] or Params['OD_continue']))
