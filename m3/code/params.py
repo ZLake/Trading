@@ -34,7 +34,7 @@ def get_params():
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
     IF_Grid_Params = {'max_samples':[0.7,0.8,0.9]
-                        ,'n_estimators':[100，200]}
+                        ,'n_estimators':[100,200]}
     LOF_Params = {'n_neighbors':20
                   ,'algorithm':'ball_tree'
                   ,'leaf_size':30
