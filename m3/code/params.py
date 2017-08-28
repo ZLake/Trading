@@ -29,6 +29,7 @@ def get_params():
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
     Params['theme'] = 'OD_IF_Test_Algo_lasso'# 本次运行的目的
+    # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.9
                  ,'n_estimators':100
@@ -57,7 +58,8 @@ def get_params():
                                         ,'max_iter':2000
                                         }
     Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]  # None,StandardScaler()
-                                  ,lasso__alpha=[0.001,0.002,0.005,0.01,0.02,0.05,0.08])
+                                  ,lasso__alpha=[0.001,0.002,0.005,0.01,0.02,0.05,0.08]
+                                  )
     # lgb params
     Params['model_lgb_default_params'] = {'learning_rate':0.02} 
     Params['model_lgb_grid_params'] = {

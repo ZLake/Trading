@@ -16,7 +16,7 @@ def get_result(theme,train_name_raw,test_name_raw):
     
     print('reading success')
 if __name__ == "__main__":
-    theme = 'ODTest'
+    theme = 'lasso_selection'
     train_name_raw = 'train_1331_1333.h5'
     test_name_raw = 'test_1331_1333.h5'
     result_df = get_result(theme,train_name_raw,test_name_raw)
