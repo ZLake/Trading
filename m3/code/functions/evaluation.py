@@ -55,7 +55,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
                                         ,temp_simple_avg]
     return eval_df
 
-def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
+def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
     # store result
     temp_result = []   
     daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -72,7 +72,7 @@ def store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,them
         temp_result.append(Params['Outlier_Detector'][Params['Outlier_Detector']['algo'] + '_'+'Params'])
         temp_result.append(Params['Outlier_Detector']['apply_on_test'])
     temp_result.append(algo)    #'estimator algo'
-    temp_result.append('')      #'estimator input params'
+    temp_result.append(algo_grid_param)      #'estimator input params'
     if(algo == 'lasso'):
         temp_result.append(dict(estimator.get_params()['steps']))
     elif(algo == 'model_lgb'):

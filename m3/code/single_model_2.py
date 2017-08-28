@@ -186,7 +186,8 @@ def training():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
         temp_time_end = time.time()
         cost_time = (temp_time_end-temp_time_start)/60                # min
-        store_result(Params,algo,eval_df,estimator,train_name_raw,test_name_raw,Params['theme'],cost_time)
+        store_result(Params,'',algo,eval_df,estimator,train_name_raw
+                     ,test_name_raw,Params['theme']+'Single',cost_time)
         
         print('garbage collection:{}'.format(gc.collect()))
     
