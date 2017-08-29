@@ -47,7 +47,7 @@ def training():
     else:
         num_threads = multiprocessing.cpu_count()
         
-    for i in range(2):
+    for i in range(1):
         imp_print('{}th Round'.format(i),60)
         #####################
         # Read the data: 选择数据的时间段
@@ -123,11 +123,11 @@ def training():
         ######
         # Lasso Regression
         ######
-        scaler = StandardScaler(copy=False)
+        scaler = StandardScaler(copy=True)
         #scaler = RobustScaler()
         lasso = Pipeline(steps=[('scaler',scaler),
-                              ('lasso',Lasso(alpha = 0.01,random_state=rng
-                                             ,copy_X = False))])
+                              ('lasso',Lasso(alpha = 0.005,random_state=rng
+                                             ,copy_X = False,max_iter = 2000))])
     
         ######
         # LightGBM

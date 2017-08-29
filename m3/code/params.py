@@ -31,7 +31,7 @@ def get_params():
     Params['theme'] = 'OD_IF_Test_Algo_lasso'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
-    IF_Params = {'max_samples':0.9
+    IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
     IF_Grid_Params = {'max_samples':[0.7,0.8,0.9]
