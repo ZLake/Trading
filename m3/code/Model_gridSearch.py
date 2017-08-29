@@ -61,6 +61,9 @@ def training():
                                                 ,OD_Grid_Params
                                                 ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = OD_Grid_Params_combs[OD_Grid_Params_combs['status']==0]
+    else:
+        OD_Grid_Params_combs_undone = pd.DataFrame(columns=['NO.','params','status']);
+        OD_Grid_Params_combs_undone.loc[len(OD_Grid_Params_combs_undone)] = [1,'None',0]
     #### Loop the ODParams:
     for index,OD_row in OD_Grid_Params_combs_undone.iterrows():
         OD_grid_param = OD_row['params']
@@ -184,8 +187,10 @@ def training():
                 temp_time_start = time.time()
                 imp_print(algo,20)
                 #define classifier:
-                estimator = get_model(algo,algo_grid_param,rng,num_threads)
-    #            estimator = eval(algo)
+                default_param = Params[algo+'_default_params']
+                estimator = get_model(algo,default_param,rng,num_threads)
+                estimator.set_params(**algo_grid_param)
+#                estimator = eval(algo)
                 #####################
                 # # Test: 测试获取评价结果
                 #####################

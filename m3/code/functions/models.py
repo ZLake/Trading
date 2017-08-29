@@ -21,16 +21,17 @@ def init_lasso(default_param,rng,num_threads):
 
 def init_model_lgb(default_param,rng,num_threads):
     print('number of thread in training lgb:{}'.format(num_threads))
-    clf = lgb.LGBMRegressor(objective='regression',num_leaves=5,
-                                      learning_rate=0.02, n_estimators=1500,
-                                      max_bin = 55, bagging_fraction = 0.8,
-                                      bagging_freq = 5, feature_fraction = 0.2319,
-                                      feature_fraction_seed=9, bagging_seed=9,
-                                      min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
-                                      num_threads = num_threads,
-                                      reg_alpha=1, reg_lambda=1,
-                                      save_binary = True
-                                      )
+#    clf = lgb.LGBMRegressor(objective='regression',num_leaves=5,
+#                                      learning_rate=0.02, n_estimators=1500,
+#                                      max_bin = 55, bagging_fraction = 0.8,
+#                                      bagging_freq = 5, feature_fraction = 0.2319,
+#                                      feature_fraction_seed=9, bagging_seed=9,
+#                                      min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
+#                                      num_threads = num_threads,
+#                                      reg_alpha=1, reg_lambda=1,
+#                                      save_binary = True
+#                                      )
+    clf = lgb.LGBMRegressor()
     clf.set_params(**default_param)
     return clf
 
