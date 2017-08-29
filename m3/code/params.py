@@ -77,7 +77,7 @@ def get_params():
         ,'objective' : ['regression']
         ,'colsample_bytree' : [0.6,0.8]
         ,'feature_fraction':[0.4,0.6]
-        ,'subsample' : [0.7,0.8]
+#        ,'subsample' : [0.7,0.8]
         ,'reg_alpha' : [1,2]
         ,'reg_lambda' : [1,2]
         }
