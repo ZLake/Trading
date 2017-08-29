@@ -45,7 +45,7 @@ def outlier_detection(train_name_raw,test_name_raw
         # outlier detection
         rng = np.random.RandomState(42)
         if(num_threads > 30):
-            num_threads = 2
+            num_threads = 1
         print('Outlier Detection nthreads:{}'.format(num_threads))
 
         if(clf_name =='LOF'):

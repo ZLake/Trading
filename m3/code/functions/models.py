@@ -29,6 +29,7 @@ def init_model_lgb(default_param,rng,num_threads):
                                       min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
                                       num_threads = num_threads,
                                       reg_alpha=1, reg_lambda=1,
+                                      save_binary = True
                                       )
     clf.set_params(**default_param)
     return clf

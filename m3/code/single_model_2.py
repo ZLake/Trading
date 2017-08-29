@@ -160,14 +160,15 @@ def training():
     ######
 
     print('number of thread in training lgb:{}'.format(num_threads))
-    model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=5,
+    model_lgb = lgb.LGBMRegressor(objective='regression',num_leaves=15,
                                   learning_rate=0.02, n_estimators=1500,
-                                  max_bin = 55, bagging_fraction = 0.8,
+                                  max_bin = 80, bagging_fraction = 0.8,
                                   bagging_freq = 5, feature_fraction = 0.2319,
                                   feature_fraction_seed=9, bagging_seed=9,
                                   min_data_in_leaf =6, min_sum_hessian_in_leaf = 11,
                                   num_threads = num_threads,
                                   reg_alpha=1, reg_lambda=1,
+                                  boosting_type = 'gbdt'
                                   )
     #grid search params
     for algo in Params['algo']:
@@ -186,8 +187,8 @@ def training():
             print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
         temp_time_end = time.time()
         cost_time = (temp_time_end-temp_time_start)/60                # min
-        store_result(Params,'',algo,eval_df,estimator,train_name_raw
-                     ,test_name_raw,Params['theme']+'Single',cost_time)
+#        store_result(Params,'',algo,eval_df,estimator,train_name_raw
+#                     ,test_name_raw,Params['theme']+'Single',cost_time)
         
         print('garbage collection:{}'.format(gc.collect()))
     

@@ -51,7 +51,7 @@ def get_params():
                                   ,'LOF_Params':LOF_Params
                                   ,'LOF_Grid_Params':LOF_Grid_Params}
     ########## Modeling parmas
-    Params['algo'] = ['lasso'] # 可选参数： lasso,model_lgb
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
     # lasso params
     Params['lasso_default_params'] = {'scaler':StandardScaler()                     
                                         ,'lasso__alpha': 0.01
@@ -63,16 +63,16 @@ def get_params():
     # lgb params
     Params['model_lgb_default_params'] = {'learning_rate':0.02} 
     Params['model_lgb_grid_params'] = {
-        'learning_rate': [0.02]
-        ,'n_estimators': [48]
-        ,'num_leaves': [18]
+        'learning_rate': [0.02,0.05]
+        ,'n_estimators': [500,1000]
+        ,'num_leaves': [12,18,30]
         ,'boosting_type' : ['gbdt']
         ,'objective' : ['regression']
         ,'seed' : [500]
-        ,'colsample_bytree' : [0.6]
-        ,'subsample' : [0.75]
-    #    ,'reg_alpha' : [1,2,6]
-    #    ,'reg_lambda' : [1,2,6]
+        ,'colsample_bytree' : [0.6,0.8]
+        ,'subsample' : [0.7,0.8]
+        ,'reg_alpha' : [1,2]
+        ,'reg_lambda' : [1,2]
         }
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
