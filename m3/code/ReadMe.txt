@@ -60,16 +60,16 @@ Grid:
         ,'reg_lambda' : [1,2]
         }
 :-------------------------
-# Test2: OD_IF_Test_Algo_model_lgb
+# Test2: OD_IF_Test_Algo_model_lgb: 测试IF OD及不同contamination
 OD:--------------------
 IF:
 'algo':'IF'
 Default:
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
-                 ,'contamination':0.1} # 0.1
+                 ,'contamination':[0.08,0.1,0.12]} # 0.1
 Grid:
-    IF_Grid_Params = {'max_samples':[0.7,0.8]
+    IF_Grid_Params = {'max_samples':[0.7]
                         ,'n_estimators':[100]}
 Model:-----------------
 Default:
@@ -85,12 +85,12 @@ Default:
 Grid:
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02]
-        ,'n_estimators': [1000,1500]
+        ,'n_estimators': [1500]
         ,'num_leaves': [30,45]
         ,'objective' : ['regression']
         ,'colsample_bytree' : [0.6,0.8]
         ,'feature_fraction':[0.4,0.6]
-        ,'reg_alpha' : [1]
-        ,'reg_lambda' : [1]
+        ,'reg_alpha' : [1,2]
+        ,'reg_lambda' : [1,2]
         }
 :-------------------------
