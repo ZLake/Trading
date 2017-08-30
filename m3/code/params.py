@@ -84,6 +84,77 @@ def get_params():
     Params['topK'] = 50 # 选股个数
     return Params
 
+def get_params2():
+    #####################
+    ## define global parameters
+    Params = {}
+    # grid search continue or reset:
+    Params['OD_continue']= True
+    Params['Algo_continue']= True
+    # data files
+    if(multiprocessing.cpu_count() >=60):
+        Params['train_name_raw'] = 'train_1200_1333.h5'
+        Params['test_name_raw'] = 'test_1200_1333.h5'
+    else:
+        Params['train_name_raw'] ='train_1331_1333.h5'
+        Params['test_name_raw'] = 'test_1331_1333.h5'
+    # theme
+    Params['theme'] = 'OD_IF_Test_Algo_model_lgb'# 本次运行的目的
+    # OD_IF_Test_Algo_lasso
+    ########## Outlier detection params
+    IF_Params = {'max_samples':0.7
+                 ,'n_estimators':100
+                 ,'contamination':0.1} # 0.1
+    IF_Grid_Params = {'max_samples':[0.7]
+                        ,'n_estimators':[100]}
+    LOF_Params = {'n_neighbors':20
+                  ,'algorithm':'ball_tree'
+                  ,'leaf_size':30
+                  ,'metric':'minkowski'
+                  ,'p':2
+                  ,'contamination':0.1
+                    }
+    LOF_Grid_Params = {}
+    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
+                                  ,'apply_on_test':True
+                                  ,'IF_Params':IF_Params
+                                  ,'IF_Grid_Params':IF_Grid_Params
+                                  ,'LOF_Params':LOF_Params
+                                  ,'LOF_Grid_Params':LOF_Grid_Params}
+    ########## Modeling parmas
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
+    # lasso params
+    Params['lasso_default_params'] = {'scaler':StandardScaler()                     
+                                        ,'lasso__alpha': 0.01
+                                        ,'max_iter':2000
+                                        }
+    Params['lasso_grid_params'] = dict(scaler=[StandardScaler()]  # None,StandardScaler()
+                                  ,lasso__alpha=[0.001,0.002,0.005,0.01,0.02,0.05,0.08]
+                                  )
+    # lgb params
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'max_bin':50
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          } 
+    Params['model_lgb_grid_params'] = {
+        'learning_rate': [0.02]
+        ,'n_estimators': [1500]
+        ,'num_leaves': [30,45]
+        ,'objective' : ['regression']
+        ,'colsample_bytree' : [0.6,0.8]
+        ,'feature_fraction':[0.4,0.6]
+        ,'reg_alpha' : [1,2]
+        ,'reg_lambda' : [1,2]
+        }
+    ########## Evaluation params
+    Params['topK'] = 50 # 选股个数
+    return Params
+
 def paramGridSearch(params):
     params_combs = ParameterGrid(params)
     return params_combs
