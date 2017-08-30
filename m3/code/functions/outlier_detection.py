@@ -187,7 +187,7 @@ def outlier_detection_grid(train_name_raw,test_name_raw
             
             temp = train_pred_values.copy()
             temp.sort()
-            threshold = temp[int(np.ceil(len(temp)*clf_params['IF_Params']['contamination']))]
+            threshold = temp[int(np.ceil(len(temp)*clf_grid_param['contamination']))]
             train_pred_outliers = (train_pred_values>threshold).astype(int) * 2 - 1
             test_pred_outliers = (test_pred_values>threshold).astype(int) * 2 - 1
 #            train_pred_outliers = clf.predict(train.values)
@@ -201,7 +201,7 @@ def outlier_detection_grid(train_name_raw,test_name_raw
             test_pred_values = pd.read_hdf('DataSet/'+test_name_proc,engine = 'c').values[:,0]
             temp = train_pred_values.copy()
             temp.sort()
-            threshold = temp[int(np.ceil(len(temp)*clf_params['IF_Params']['contamination']))]
+            threshold = temp[int(np.ceil(len(temp)*clf_grid_param['contamination']))]
             train_pred_outliers = (train_pred_values>=threshold).astype(int) * 2 - 1
             test_pred_outliers = (test_pred_values>=threshold).astype(int) * 2 - 1
         elif(clf_name == 'LOF'):

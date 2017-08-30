@@ -64,13 +64,13 @@ Grid:
 OD:--------------------
 IF:
 'algo':'IF'
-Default:
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
-                 ,'contamination':[0.08,0.1,0.12]} # 0.1
+                 ,'contamination':0.1} # 0.1
 Grid:
     IF_Grid_Params = {'max_samples':[0.7]
-                        ,'n_estimators':[100]}
+                        ,'n_estimators':[100]
+                        ,'contamination':[0.08,0.1,0.12]}
 Model:-----------------
 Default:
     Params['model_lgb_default_params'] = {'objective':'regression'

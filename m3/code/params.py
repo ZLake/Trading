@@ -104,9 +104,10 @@ def get_params2():
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
-                 ,'contamination':[0.08,0.1,0.12]} # 0.1
+                 ,'contamination':0.1} # 0.1
     IF_Grid_Params = {'max_samples':[0.7]
-                        ,'n_estimators':[100]}
+                        ,'n_estimators':[100]
+                        ,'contamination':[0.08,0.1,0.12]}
     LOF_Params = {'n_neighbors':20
                   ,'algorithm':'ball_tree'
                   ,'leaf_size':30
