@@ -33,3 +33,64 @@ num_iterations = 100,                      #boosting iters
 feature_fraction_seed=9, 
 bagging_seed=9,
 save_binary = True
+
+# Test1:    OD_None_Test_Algo_model_lgb
+OD:--------------------
+None
+Model:-----------------
+Default:
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'max_bin':50
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          }
+Grid:
+    Params['model_lgb_grid_params'] = {
+        'learning_rate': [0.02,0.05]
+        ,'n_estimators': [1000,1500]
+        ,'num_leaves': [15,30,45]
+        ,'objective' : ['regression']
+        ,'colsample_bytree' : [0.6,0.8]
+        ,'feature_fraction':[0.4,0.6]
+        ,'reg_alpha' : [1,2]
+        ,'reg_lambda' : [1,2]
+        }
+:-------------------------
+# Test2: OD_IF_Test_Algo_model_lgb
+OD:--------------------
+IF:
+'algo':'IF'
+Default:
+    IF_Params = {'max_samples':0.7
+                 ,'n_estimators':100
+                 ,'contamination':0.1} # 0.1
+Grid:
+    IF_Grid_Params = {'max_samples':[0.7,0.8]
+                        ,'n_estimators':[100]}
+Model:-----------------
+Default:
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'max_bin':50
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          }
+Grid:
+    Params['model_lgb_grid_params'] = {
+        'learning_rate': [0.02]
+        ,'n_estimators': [1000,1500]
+        ,'num_leaves': [30,45]
+        ,'objective' : ['regression']
+        ,'colsample_bytree' : [0.6,0.8]
+        ,'feature_fraction':[0.4,0.6]
+        ,'reg_alpha' : [1]
+        ,'reg_lambda' : [1]
+        }
+:-------------------------

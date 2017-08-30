@@ -28,13 +28,13 @@ def get_params():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'OD_None_Test_Algo_model_lgb'# 本次运行的目的
+    Params['theme'] = 'OD_IF_Test_Algo_model_lgb'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
                  ,'contamination':0.1} # 0.1
-    IF_Grid_Params = {'max_samples':[0.7]
+    IF_Grid_Params = {'max_samples':[0.7,0.8]
                         ,'n_estimators':[100]}
     LOF_Params = {'n_neighbors':20
                   ,'algorithm':'ball_tree'
@@ -44,7 +44,7 @@ def get_params():
                   ,'contamination':0.1
                     }
     LOF_Grid_Params = {}
-    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
+    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
                                   ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
                                   ,'IF_Grid_Params':IF_Grid_Params
