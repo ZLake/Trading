@@ -44,7 +44,7 @@ def training():
     Params = get_params2()
     rng = np.random.RandomState(42)
     if multiprocessing.cpu_count() >=60:
-        num_threads = multiprocessing.cpu_count()//2.5
+        num_threads = 45
     else:
         num_threads = multiprocessing.cpu_count()
     # get dataset filename
