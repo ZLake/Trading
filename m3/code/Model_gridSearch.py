@@ -46,7 +46,7 @@ def training():
     if multiprocessing.cpu_count() >=60:
         num_threads = multiprocessing.cpu_count()//2
     else:
-        num_threads = multiprocessing.cpu_count()
+        num_threads = multiprocessing.cpu_count() - 1
     # get dataset filename
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
@@ -62,6 +62,12 @@ def training():
                                                 ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = OD_Grid_Params_combs[OD_Grid_Params_combs['status']==0]
     else:
+        OD_Grid_Params = {'algo':['None']}
+        OD_Grid_Params_combs = load_params_combs(Params['theme']
+                                                ,'OD_None'
+                                                ,train_name_raw
+                                                ,OD_Grid_Params
+                                                ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = pd.DataFrame(columns=['NO.','params','status']);
         OD_Grid_Params_combs_undone.loc[len(OD_Grid_Params_combs_undone)] = [1,'None',0]
     #### Loop the ODParams:
@@ -224,7 +230,10 @@ def training():
         
                 
         #update done info for grid search:outlier detection
-        update_params_combs(Params['theme'],train_name_raw,'OD',OD_row['NO.'])
+        if (Params['Outlier_Detector']['algo']!= 'None'):
+            update_params_combs(Params['theme'],train_name_raw,'OD',OD_row['NO.'])
+        else:
+            update_params_combs(Params['theme'],train_name_raw,'OD_None',OD_row['NO.'])
 
 if __name__ == "__main__":
     training()
