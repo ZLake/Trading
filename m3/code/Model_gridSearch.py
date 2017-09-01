@@ -212,12 +212,13 @@ def training():
                 store_result(Params,algo_grid_param,algo,eval_df,estimator
                              ,train_name_raw,test_name_raw,Params['theme'],cost_time)
                 print('Cost time:{}'.format(cost_time))
-                print('garbage collection:{}'.format(gc.collect()))
                 #update done info for grid search:algo
                 update_params_combs(Params['theme'],train_name_raw
                                     ,'OD_{}_Model'.format(OD_row['NO.'])
                                     ,algo_row['NO.'])
                 del estimator,eval_df
+                print('garbage collection:{}'.format(gc.collect()))
+
             imp_print('Grid search on algo:{} is finished...'.format(algo))
             print('garbage collection:{}'.format(gc.collect()))
         
