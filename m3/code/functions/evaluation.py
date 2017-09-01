@@ -8,7 +8,7 @@ Created on Wed Aug 23 10:06:17 2017
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
-
+import gc
 import os
 from time import localtime, strftime
 import warnings
@@ -53,6 +53,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
             eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
                                         ,temp_min,temp_max,temp_above_039,temp_under_039
                                         ,temp_simple_avg]
+    print('evaluate_test garbage collection:{}'.format(gc.collect()))
     return eval_df
 
 def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
