@@ -129,5 +129,7 @@ def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,te
     with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             final_result.to_hdf(full_path,'result',append=False)
+    
+    print('store_result garbage collection:{}'.format(gc.collect()))
     #加上新纪录并保存
     
