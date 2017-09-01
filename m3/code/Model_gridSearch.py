@@ -217,7 +217,7 @@ def training():
                 update_params_combs(Params['theme'],train_name_raw
                                     ,'OD_{}_Model'.format(OD_row['NO.'])
                                     ,algo_row['NO.'])
-            
+                del estimator,eval_df
             imp_print('Grid search on algo:{} is finished...'.format(algo))
             print('garbage collection:{}'.format(gc.collect()))
         
