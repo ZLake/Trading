@@ -72,13 +72,17 @@ def get_params():
                                           } 
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02,0.05,0.08]
-        ,'n_estimators': [1000,1300,1600,2000]
+        ,'n_estimators': [800,1000,1300,1600,2000]
         ,'num_leaves': [30,45,60]
         ,'objective' : ['regression']
         ,'feature_fraction':[0.6,0.8]
         ,'reg_alpha' : [2]
         ,'reg_lambda' : [1]
         }
+    Params['model_lgb_grid_params_filter'] = [
+            {'learning_rate':[0.02],'n_estimators':[800,1000]},
+            {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
+            ]
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
     return Params
@@ -159,7 +163,7 @@ def paramGridSearch(params):
     params_combs = ParameterGrid(params)
     return params_combs
 
-def load_params_combs(theme,stage,train_name_raw,params,continue_mode = True):
+def load_params_combs(theme,stage,train_name_raw,params,params_filter=[],continue_mode = True):
     file_name = train_name_raw.strip('.h5').strip('train_')
     full_path = 'Result/'+file_name+'/'+theme+'__' + stage + '_param_combs.h5'
     if not os.path.exists('Result/'+file_name):
@@ -171,10 +175,25 @@ def load_params_combs(theme,stage,train_name_raw,params,continue_mode = True):
         print('Generating parameter combinations...')
         param_combs_df = pd.DataFrame(columns=['NO.','params','status']) # status: 0:undone; 1:done
         param_combs = paramGridSearch(params)
-        ind = 1
-        for param in param_combs:
-            param_combs_df.loc[len(param_combs_df)] = [ind,param,0]
-            ind+=1
+        if params_filter: # if needs parameter filter
+            ind = 1
+            for param in param_combs:
+                filtered = 0
+                for params_filter_comb in params_filter:
+                    filter_flag = 1
+                    for filter_key in params_filter_comb.keys():
+                        filter_flag = filter_flag * (param[filter_key] in params_filter_comb[filter_key])
+                    if(filter_flag == 1):
+                        filtered = 1
+                        continue
+                if (filtered == 0):
+                    param_combs_df.loc[len(param_combs_df)] = [ind,param,0]
+                    ind+=1
+        else:
+            ind = 1
+            for param in param_combs:
+                param_combs_df.loc[len(param_combs_df)] = [ind,param,0]
+                ind+=1
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             param_combs_df.to_hdf(full_path,'grid_search_params')
@@ -198,6 +217,6 @@ if __name__ == "__main__":
     params_lasso = dict(scaler=[StandardScaler()]
                                   ,lasso__alpha=[0.0001,0.0005,0.001,0.002,0.005,0.01,0.05])
     params ={}
-    params_combs = load_params_combs('test','train_1331_1333.h5',params)
+    params_combs = load_params_combs('test','train_1331_1333.h5',params,[])
     
     print ("Finished...")

@@ -12,7 +12,6 @@ sys.path.insert(0, 'functions')
 import numpy as np # linear algebra
 import scipy as sp
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import dask.dataframe as dd
 
 from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
 from sklearn.pipeline import make_pipeline,Pipeline
@@ -59,6 +58,7 @@ def training():
                                                 ,'OD'
                                                 ,train_name_raw
                                                 ,OD_Grid_Params
+                                                ,[]
                                                 ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = OD_Grid_Params_combs[OD_Grid_Params_combs['status']==0]
     else:
@@ -67,6 +67,7 @@ def training():
                                                 ,'OD_None'
                                                 ,train_name_raw
                                                 ,OD_Grid_Params
+                                                ,[]
                                                 ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = pd.DataFrame(columns=['NO.','params','status']);
         OD_Grid_Params_combs_undone.loc[len(OD_Grid_Params_combs_undone)] = [1,'None',0]
@@ -179,10 +180,12 @@ def training():
         for algo in Params['algo']:
             # get algo param grid
             algo_Grid_Params = Params[algo+'_grid_params']
+            algo_Grid_Params_filter = Params[algo+'_grid_params_filter']
             algo_param_combs = load_params_combs(Params['theme']
                                                 ,'OD_{}_Model'.format(OD_row['NO.'])
                                                 ,train_name_raw
                                                 ,algo_Grid_Params
+                                                ,algo_Grid_Params_filter
                                                 ,continue_mode = (Params['Algo_continue'] or Params['OD_continue']))
             algo_Grid_Params_combs_undone = algo_param_combs[algo_param_combs['status']==0]
             #### Loop the ODParams:
