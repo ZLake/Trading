@@ -28,7 +28,7 @@ def get_params():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'OD_None_Test_Algo_model_lgb_rate_nTree'# 本次运行的目的
+    Params['theme'] = 'OD_None_Test_Algo_model_lgb_rate_nTree_feaFrac'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
