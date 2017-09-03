@@ -11,6 +11,7 @@ import numpy as np
 from tabulate import tabulate
 import warnings
 
+
 def get_result(theme,train_name_raw,test_name_raw):
     file_name = train_name_raw.strip('.h5').strip('train_')
     full_path = 'Result/'+file_name+'/'+theme+'__' + file_name+'_result.h5'
@@ -111,8 +112,8 @@ def check_model_params(result_df,params,metric):
     
 if __name__ == "__main__":
     theme = 'OD_None_Test_Algo_model_lgb'
-    train_name_raw = 'train_1331_1333.h5'
-    test_name_raw = 'test_1331_1333.h5'
+    train_name_raw = 'train_1200_1333.h5'
+    test_name_raw = 'test_1200_1333.h5'
     result_df = get_result(theme,train_name_raw,test_name_raw)
     print('Possible params to watch:{}'.format(result_df.iloc[0]['estimator input params'].keys()))
     # check one parameter performance

@@ -27,7 +27,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
     test_withPred['y_test'] = y_test
     test_withPred["pred_test"] = y_test_pred 
     test_withPred.insert(0, 'csv_index', test_csv_index.values)
-    csv_indexs = test_withPred['csv_index'].unique()
+    csv_indexs = test_withPred['csv_index'].copy().unique()
     # 每个index单独评分
     eval_df = pd.DataFrame(columns=['csv_index'
                                     ,'topk'
@@ -53,6 +53,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
             eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
                                         ,temp_min,temp_max,temp_above_039,temp_under_039
                                         ,temp_simple_avg]
+    del y_test_pred,test_withPred,csv_indexs
     print('evaluate_test garbage collection:{}'.format(gc.collect()))
     return eval_df
 
