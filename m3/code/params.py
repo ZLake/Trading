@@ -75,7 +75,7 @@ def get_params():
         ,'n_estimators': [1000,1300,1600,2000]
         ,'num_leaves': [30,45,60]
         ,'objective' : ['regression']
-        ,'feature_fraction':[0.6]
+        ,'feature_fraction':[0.6,0.8]
         ,'reg_alpha' : [2]
         ,'reg_lambda' : [1]
         }
