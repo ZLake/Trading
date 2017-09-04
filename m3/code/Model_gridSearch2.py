@@ -203,7 +203,7 @@ def training():
                 #####################
                 # # Test: 测试获取评价结果
                 #####################
-#                imp_print("Testing...",40)
+                imp_print("Testing...",40)
 #                eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
 #        
 #                print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
