@@ -56,7 +56,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
         del (temp_test,temp_test_sorted,temp_avgLabel,
             temp_stdLabel,temp_min,temp_max,temp_above_039,temp_under_039
                                         ,temp_simple_avg,temp_select)
-    del (model,mse,y_test,y_test_pred,test_csv_index,
+    del (train,y_train,model,mse,y_test,y_test_pred,test_csv_index,
          test_withPred,csv_indexs)
     print('evaluate_test garbage collection:{}'.format(gc.collect()))
     return eval_df
