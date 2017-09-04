@@ -201,6 +201,8 @@ def load_params_combs(theme,stage,train_name_raw,params,params_filter=[],continu
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             param_combs_df.to_hdf(full_path,'grid_search_params')
+            del param_combs
+    print('load_params_combs garbage collection:{}'.format(gc.collect()))
     return param_combs_df
         
 def update_params_combs(theme,train_name_raw,stage,ind):
@@ -213,6 +215,8 @@ def update_params_combs(theme,train_name_raw,stage,ind):
         warnings.simplefilter("ignore")
         param_combs_df.to_hdf(full_path,'grid_search_params')
     print('stage:{} NO.{} is done...'.format(stage,ind))
+    del param_combs_df
+    print('update_params_combs garbage collection:{}'.format(gc.collect()))
     
 if __name__ == "__main__":
     params_od = {'max_samples':[0.7,0.8,0.9]
