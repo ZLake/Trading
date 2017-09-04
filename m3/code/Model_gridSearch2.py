@@ -12,7 +12,6 @@ sys.path.insert(0, 'functions')
 import numpy as np # linear algebra
 import scipy as sp
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import dask.dataframe as dd
 
 from sklearn.linear_model import ElasticNet, Lasso,  BayesianRidge, LassoLarsIC
 from sklearn.pipeline import make_pipeline,Pipeline
@@ -46,7 +45,7 @@ def training():
     if multiprocessing.cpu_count() >=60:
         num_threads = multiprocessing.cpu_count()//2
     else:
-        num_threads = multiprocessing.cpu_count()
+        num_threads = multiprocessing.cpu_count() - 1
     # get dataset filename
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
@@ -59,9 +58,17 @@ def training():
                                                 ,'OD'
                                                 ,train_name_raw
                                                 ,OD_Grid_Params
+                                                ,[]
                                                 ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = OD_Grid_Params_combs[OD_Grid_Params_combs['status']==0]
     else:
+        OD_Grid_Params = {'algo':['None']}
+        OD_Grid_Params_combs = load_params_combs(Params['theme']
+                                                ,'OD_None'
+                                                ,train_name_raw
+                                                ,OD_Grid_Params
+                                                ,[]
+                                                ,continue_mode = Params['OD_continue'])
         OD_Grid_Params_combs_undone = pd.DataFrame(columns=['NO.','params','status']);
         OD_Grid_Params_combs_undone.loc[len(OD_Grid_Params_combs_undone)] = [1,'None',0]
     #### Loop the ODParams:
@@ -173,10 +180,12 @@ def training():
         for algo in Params['algo']:
             # get algo param grid
             algo_Grid_Params = Params[algo+'_grid_params']
+            algo_Grid_Params_filter = Params[algo+'_grid_params_filter']
             algo_param_combs = load_params_combs(Params['theme']
                                                 ,'OD_{}_Model'.format(OD_row['NO.'])
                                                 ,train_name_raw
                                                 ,algo_Grid_Params
+                                                ,algo_Grid_Params_filter
                                                 ,continue_mode = (Params['Algo_continue'] or Params['OD_continue']))
             algo_Grid_Params_combs_undone = algo_param_combs[algo_param_combs['status']==0]
             #### Loop the ODParams:
@@ -203,17 +212,16 @@ def training():
                     print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
                 temp_time_end = time.time()
                 cost_time = (temp_time_end-temp_time_start)/60                # min
-                store_result(Params,algo_grid_param,algo,eval_df,estimator
+#                store_result(Params,algo_grid_param,algo,eval_df,estimator
                              ,train_name_raw,test_name_raw,Params['theme'],cost_time)
                 print('Cost time:{}'.format(cost_time))
                 #update done info for grid search:algo
                 update_params_combs(Params['theme'],train_name_raw
                                     ,'OD_{}_Model'.format(OD_row['NO.'])
                                     ,algo_row['NO.'])
-                del eval_df,estimator
+                del estimator,eval_df
                 print('garbage collection:{}'.format(gc.collect()))
 
-            
             imp_print('Grid search on algo:{} is finished...'.format(algo))
             print('garbage collection:{}'.format(gc.collect()))
         
@@ -226,8 +234,12 @@ def training():
         
                 
         #update done info for grid search:outlier detection
-        update_params_combs(Params['theme'],train_name_raw,'OD',OD_row['NO.'])
-
+        if (Params['Outlier_Detector']['algo']!= 'None'):
+            update_params_combs(Params['theme'],train_name_raw,'OD',OD_row['NO.'])
+        else:
+            update_params_combs(Params['theme'],train_name_raw,'OD_None',OD_row['NO.'])
+        
+        
 if __name__ == "__main__":
     training()
     print ("Finished...")

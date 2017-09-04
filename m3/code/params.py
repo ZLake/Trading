@@ -102,7 +102,7 @@ def get_params2():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'OD_IF_Test_Algo_model_lgb'# 本次运行的目的
+    Params['theme'] = 'Memory_test'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
@@ -147,7 +147,7 @@ def get_params2():
                                           } 
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02]
-        ,'n_estimators': [1500]
+        ,'n_estimators': [1]
         ,'num_leaves': [30,45]
         ,'objective' : ['regression']
         ,'colsample_bytree' : [0.6,0.8]
@@ -155,6 +155,10 @@ def get_params2():
         ,'reg_alpha' : [1,2]
         ,'reg_lambda' : [1,2]
         }
+    Params['model_lgb_grid_params_filter'] = [
+            {'learning_rate':[0.02],'n_estimators':[800,1000]},
+            {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
+            ]
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
     return Params
