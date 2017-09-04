@@ -204,22 +204,22 @@ def training():
                 # # Test: 测试获取评价结果
                 #####################
                 imp_print("Testing...",40)
-#                eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
-#        
+                eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
+        
 #                print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
 #        
 #                for topk in eval_df['topk'].unique():
 #                    print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
-#                temp_time_end = time.time()
-#                cost_time = (temp_time_end-temp_time_start)/60                # min
-#                store_result(Params,algo_grid_param,algo,eval_df,estimator
-#                             ,train_name_raw,test_name_raw,Params['theme'],cost_time)
-#                print('Cost time:{}'.format(cost_time))
-#                #update done info for grid search:algo
-#                update_params_combs(Params['theme'],train_name_raw
-#                                    ,'OD_{}_Model'.format(OD_row['NO.'])
-#                                    ,algo_row['NO.'])
-#                del estimator,eval_df
+                temp_time_end = time.time()
+                cost_time = (temp_time_end-temp_time_start)/60                # min
+                store_result(Params,algo_grid_param,algo,eval_df,estimator
+                             ,train_name_raw,test_name_raw,Params['theme'],cost_time)
+                print('Cost time:{}'.format(cost_time))
+                #update done info for grid search:algo
+                update_params_combs(Params['theme'],train_name_raw
+                                    ,'OD_{}_Model'.format(OD_row['NO.'])
+                                    ,algo_row['NO.'])
+                del estimator,eval_df
                 print('garbage collection:{}'.format(gc.collect()))
 
             imp_print('Grid search on algo:{} is finished...'.format(algo))
