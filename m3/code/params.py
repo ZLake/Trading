@@ -119,7 +119,7 @@ def get_params2():
                   ,'contamination':0.1
                     }
     LOF_Grid_Params = {}
-    Params['Outlier_Detector'] = {'algo':'IF'                 # None,IF:IsolationForest,LOF
+    Params['Outlier_Detector'] = {'algo':'None'                 # None,IF:IsolationForest,LOF
                                   ,'apply_on_test':True
                                   ,'IF_Params':IF_Params
                                   ,'IF_Grid_Params':IF_Grid_Params
