@@ -91,7 +91,7 @@ def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,te
     temp_result.append(eval_df['under_039'][eval_df['topk']==50].mean())
     temp_result.append(eval_df['under_039'][eval_df['topk']==30].mean())
     temp_result.append(eval_df['under_039'][eval_df['topk']==10].mean())
-    temp_result.append(eval_df.copy())
+    temp_result.append(eval_df)
     temp_result.append(eval_df['simple_avg'].mean())
     #读取之前的记录
     # Generate file name for storage
@@ -130,7 +130,8 @@ def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,te
     with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             final_result.to_hdf(full_path,'result',append=False)
-    del eval_df,temp_result
+            del final_result
+    del temp_result,eval_df
     print('store_result garbage collection:{}'.format(gc.collect()))
     #加上新纪录并保存
     
