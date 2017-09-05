@@ -111,13 +111,13 @@ def check_model_params(result_df,params,metric):
                 
     
 if __name__ == "__main__":
-    theme = 'OD_None_Test_Algo_model_lgb'
+    theme = 'OD_None_Test_Algo_model_lgb_rate_nTree_feaFrac'
     train_name_raw = 'train_1200_1333.h5'
     test_name_raw = 'test_1200_1333.h5'
     result_df = get_result(theme,train_name_raw,test_name_raw)
     print('Possible params to watch:{}'.format(result_df.iloc[0]['estimator input params'].keys()))
     # check one parameter performance
-    result_df_analysis = check_model_params(result_df,['learning_rate','n_estimators'],['top50_avg'])
+    result_df_analysis = check_model_params(result_df,['num_leaves'],['top50_avg'])
     
 #    print (tabulate(result_df_analysis, headers='keys', tablefmt='psql'))
     
