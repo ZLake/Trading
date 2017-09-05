@@ -110,7 +110,7 @@ def get_params2():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'Param_test'# 本次运行的目的
+    Params['theme'] = 'MultiProc_test'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
@@ -153,7 +153,7 @@ def get_params2():
                                           } 
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02]
-        ,'n_estimators': [100]
+        ,'n_estimators': [300]
         ,'num_leaves': [45]
         ,'objective' : ['regression']
         ,'feature_fraction':[0.4]
@@ -163,7 +163,7 @@ def get_params2():
         ,'subsample_freq':[1,0.8]
         ,'colsample_bytree':[1,0.8]
         ,'bagging_fraction':[1,0.8]
-        ,'bagging_freq':[3,5,7]
+        ,'bagging_freq':[3,5]
         }
     Params['model_lgb_grid_params_filter'] = [
             {'learning_rate':[0.02],'n_estimators':[800,1000]},

@@ -31,7 +31,7 @@ def init_model_lgb(default_param,rng,num_threads):
 #                                      reg_alpha=1, reg_lambda=1,
 #                                      save_binary = True
 #                                      )
-    clf = lgb.LGBMRegressor()
+    clf = lgb.LGBMRegressor(n_jobs = num_threads)
     clf.set_params(**default_param)
     return clf
 
