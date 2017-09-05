@@ -111,7 +111,7 @@ def check_model_params(result_df,params,metric):
                 
     
 if __name__ == "__main__":
-    theme = 'Param_test'
+    theme = 'MultiVSsingle_test'
     train_name_raw = 'train_1331_1333.h5'
     test_name_raw = 'test_1331_1333.h5'
     result_df = get_result(theme,train_name_raw,test_name_raw)
