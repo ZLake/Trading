@@ -206,10 +206,10 @@ def training():
                 imp_print("Testing...",40)
                 eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
         
-#                print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
-#        
-#                for topk in eval_df['topk'].unique():
-#                    print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
+                print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
+        
+                for topk in eval_df['topk'].unique():
+                    print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
                 temp_time_end = time.time()
                 cost_time = (temp_time_end-temp_time_start)/60                # min
                 store_result(Params,algo_grid_param,algo,eval_df,estimator

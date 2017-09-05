@@ -81,9 +81,16 @@ def get_params():
         ,'max_bin':[50,100]
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'learning_rate':[0.02],'n_estimators':[800,1000]},
-            {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
+            {'learning_rate':[0.01],'objective':['huber']},
+            {'num_leaves':[75],'objective':['huber']},
+            {'max_bin':[100],'objective':['huber']}
             ]
+    '''
+    untested params:
+        subsample
+        subsample_freq
+        colsample_bytree: not useful?
+    '''
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
     return Params
@@ -103,7 +110,7 @@ def get_params2():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'Memory_test2'# 本次运行的目的
+    Params['theme'] = 'Param_test'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
@@ -141,20 +148,22 @@ def get_params2():
                                           ,'max_bin':50
                                           ,'boosting_type' : 'gbdt'
                                           ,'save_binary':True
-                                          ,'bagging_fraction':0.8
-                                          ,'bagging_freq':5
                                           ,'min_data_in_leaf':100
                                           ,'min_sum_hessian_in_leaf':10
                                           } 
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02]
-        ,'n_estimators': [1]
-        ,'num_leaves': [30,45]
+        ,'n_estimators': [100]
+        ,'num_leaves': [45]
         ,'objective' : ['regression']
-        ,'colsample_bytree' : [0.6,0.8,0.9]
-        ,'feature_fraction':[0.4,0.6,0.9]
-        ,'reg_alpha' : [1,2,3,4]
-        ,'reg_lambda' : [1,2,4,5]
+        ,'feature_fraction':[0.4]
+        ,'reg_alpha' : [1]
+        ,'reg_lambda' : [1]
+        ,'subsample':[1,0.8]
+        ,'subsample_freq':[1,0.8]
+        ,'colsample_bytree':[1,0.8]
+        ,'bagging_fraction':[1,0.8]
+        ,'bagging_freq':[3,5,7]
         }
     Params['model_lgb_grid_params_filter'] = [
             {'learning_rate':[0.02],'n_estimators':[800,1000]},
