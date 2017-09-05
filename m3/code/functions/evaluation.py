@@ -25,7 +25,7 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
     # take top 50 stocks and calculate avg(label)
     test_withPred = pd.DataFrame()
     test_withPred['y_test'] = y_test.copy()
-    test_withPred["pred_test"] = y_test_pred.copy()
+    test_withPred["pred_test"] = y_test_pred
     test_withPred.insert(0, 'csv_index', test_csv_index.values)
     csv_indexs = test_withPred['csv_index'].unique()
     # 每个index单独评分
@@ -53,11 +53,11 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
             eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
                                         ,temp_min,temp_max,temp_above_039,temp_under_039
                                         ,temp_simple_avg]
-        del (temp_test,temp_test_sorted,temp_avgLabel,
-            temp_stdLabel,temp_min,temp_max,temp_above_039,temp_under_039
-                                        ,temp_simple_avg,temp_select)
-    del (train,y_train,model,mse,y_test,y_test_pred,test_csv_index,
-         test_withPred,csv_indexs)
+#        del (temp_test,temp_test_sorted,temp_avgLabel,
+#            temp_stdLabel,temp_min,temp_max,temp_above_039,temp_under_039
+#                                        ,temp_simple_avg,temp_select)
+#    del (train,y_train,model,mse,y_test,y_test_pred,test_csv_index,
+#         test_withPred,csv_indexs)
     print('evaluate_test garbage collection:{}'.format(gc.collect()))
     return eval_df
 
