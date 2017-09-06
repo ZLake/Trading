@@ -28,10 +28,10 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'OD_None_Test_Algo_model_lgb_rate_nTree_leave_loss_mbin'# 本次运行的目的
+    Params['theme'] = 'OD_None_Test_Algo_model_lgb_dataTime_bag_feaRatio'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Select Train data start time
-    Params['Train_start_time'] = [0]
+    Params['Train_start_time'] = [0,100,200]
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
@@ -66,26 +66,23 @@ def get_params():
     Params['model_lgb_default_params'] = {'objective':'regression'
                                           ,'boosting_type' : 'gbdt'
                                           ,'save_binary':True
-                                          ,'bagging_fraction':0.8
-                                          ,'bagging_freq':5
                                           ,'min_data_in_leaf':100
                                           ,'min_sum_hessian_in_leaf':10
                                           #### found:
-                                          ,'feature_fraction':0.6
                                           ,'reg_alpha':2
                                           ,'reg_lambda':1
+                                          ,'max_bin':100
+                                          ,'n_estimators':1 # can be more
+                                          ,'learning_rate':0.02 # can be less
+                                          ,'num_leaves':45
                                           } 
     Params['model_lgb_grid_params'] = {
-        'learning_rate': [0.01,0.02]
-        ,'n_estimators': [1300,1600,2000]
-        ,'num_leaves': [45,60,75]
-        ,'objective' : ['regression','huber']
-        ,'max_bin':[50,100]
+            'bagging_fraction':[0.7,0.8,0.9]
+            ,'bagging_freq':[3,5,7]
+            ,'feature_fraction':[0.5,0.6,0.7]
+
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'learning_rate':[0.01],'objective':['huber']},
-            {'num_leaves':[75],'objective':['huber']},
-            {'max_bin':[100],'objective':['huber']}
             ]
     '''
     untested params:
@@ -150,29 +147,29 @@ def get_params2():
                                   )
     # lgb params
     Params['model_lgb_default_params'] = {'objective':'regression'
-                                          ,'max_bin':50
                                           ,'boosting_type' : 'gbdt'
                                           ,'save_binary':True
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
                                           ,'min_data_in_leaf':100
                                           ,'min_sum_hessian_in_leaf':10
-                                          } 
+                                          #### found:
+                                          ,'feature_fraction':0.6
+                                          ,'reg_alpha':2
+                                          ,'reg_lambda':1
+                                          }  
+    
     Params['model_lgb_grid_params'] = {
-        'learning_rate': [0.02]
-        ,'n_estimators': [1000]
-        ,'num_leaves': [45]
-        ,'objective' : ['regression']
-        ,'feature_fraction':[0.6]
-        ,'reg_alpha' : [1]
-        ,'reg_lambda' : [1]
-        ,'subsample':[1]
-        ,'subsample_freq':[1]
-        ,'colsample_bytree':[1]
-        ,'bagging_fraction':[1]
-        ,'bagging_freq':[5]
-        ,'subsample_for_bin':[100,1000,1500]
+        'learning_rate': [0.01,0.02]
+        ,'n_estimators': [1300,1600,2000]
+        ,'num_leaves': [45,60,75]
+        ,'objective' : ['regression','huber']
+        ,'max_bin':[50,100]
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
+            {'learning_rate':[0.01],'objective':['huber']},
+            {'num_leaves':[75],'objective':['huber']},
+            {'max_bin':[100],'objective':['huber']}
             ]
     # lgb general params
 #    Params['model_lgb_general_default_params'] = Params['model_lgb_default_params']
