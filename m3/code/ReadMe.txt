@@ -35,6 +35,8 @@ bagging_seed=9,
 save_binary = True
 
 # Test1:    OD_None_Test_Algo_model_lgb
+Data time:-------------
+    Params['Train_start_time'] = [0]
 OD:--------------------
 None
 Model:-----------------
@@ -59,7 +61,9 @@ Grid:
         ,'reg_lambda' : [1,2]
         }
 :-------------------------
-# Test1.1:    OD_None_Test_Algo_model_lgb_rate_nTree
+# Test1.1:    OD_None_Test_Algo_model_lgb_rate_nTree_feaFrac
+Data time:-------------
+    Params['Train_start_time'] = [0]
 OD:--------------------
 None
 Model:-----------------
@@ -87,7 +91,41 @@ Grid:
             {'learning_rate':[0.02],'n_estimators':[800,1000]},
             {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
             ]
-
+:-------------------------
+# Test1.2: OD_None_Test_Algo_model_lgb_rate_nTree_leave_loss_mbin
+Data time:-------------
+    Params['Train_start_time'] = [0]
+OD:--------------------
+None
+Model:-----------------
+Default:
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          #### found:
+                                          ,'feature_fraction':0.6
+                                          ,'reg_alpha':2
+                                          ,'reg_lambda':1
+                                          } 
+Grid:
+    Params['model_lgb_grid_params'] = {
+        'learning_rate': [0.01,0.02]
+        ,'n_estimators': [1300,1600,2000]
+        ,'num_leaves': [45,60,75]
+        ,'objective' : ['regression','huber']
+        ,'max_bin':[50,100]
+        }
+    Params['model_lgb_grid_params_filter'] = [
+            {'learning_rate':[0.01],'objective':['huber']},
+            {'num_leaves':[75],'objective':['huber']},
+            {'max_bin':[100],'objective':['huber']}
+            ]
+    
+    
 # Test2: OD_IF_Test_Algo_model_lgb: 测试IF OD及不同contamination, Undone
 OD:--------------------
 IF:

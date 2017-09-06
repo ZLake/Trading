@@ -25,11 +25,13 @@ def get_params():
         Params['train_name_raw'] = 'train_1200_1333.h5'
         Params['test_name_raw'] = 'test_1200_1333.h5'
     else:
-        Params['train_name_raw'] ='train_1331_1333.h5'
-        Params['test_name_raw'] = 'test_1331_1333.h5'
+        Params['train_name_raw'] ='train_1332_1333.h5'
+        Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
     Params['theme'] = 'OD_None_Test_Algo_model_lgb_rate_nTree_leave_loss_mbin'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
+    ########## Select Train data start time
+    Params['Train_start_time'] = [0]
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
@@ -87,9 +89,10 @@ def get_params():
             ]
     '''
     untested params:
-        subsample
-        subsample_freq
+        subsample: not useful?
+        subsample_freq: not useful?
         colsample_bytree: not useful?
+        subsample_for_bin:not useful?
     '''
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
@@ -110,8 +113,10 @@ def get_params2():
         Params['train_name_raw'] ='train_1331_1333.h5'
         Params['test_name_raw'] = 'test_1331_1333.h5'
     # theme
-    Params['theme'] = 'MultiVSsingle_test'# 本次运行的目的
+    Params['theme'] = 'test'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
+    ########## Select Train data start time
+    Params['Train_start_time'] = [0]
     ########## Outlier detection params
     IF_Params = {'max_samples':0.7
                  ,'n_estimators':100
@@ -134,7 +139,7 @@ def get_params2():
                                   ,'LOF_Params':LOF_Params
                                   ,'LOF_Grid_Params':LOF_Grid_Params}
     ########## Modeling parmas
-    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb
+    Params['algo'] = ['model_lgb'] # 可选参数： lasso,model_lgb,model_lgb_general
     # lasso params
     Params['lasso_default_params'] = {'scaler':StandardScaler()                     
                                         ,'lasso__alpha': 0.01
@@ -153,10 +158,10 @@ def get_params2():
                                           } 
     Params['model_lgb_grid_params'] = {
         'learning_rate': [0.02]
-        ,'n_estimators': [1500]
+        ,'n_estimators': [1000]
         ,'num_leaves': [45]
         ,'objective' : ['regression']
-        ,'feature_fraction':[0.4,0.6]
+        ,'feature_fraction':[0.6]
         ,'reg_alpha' : [1]
         ,'reg_lambda' : [1]
         ,'subsample':[1]
@@ -164,11 +169,30 @@ def get_params2():
         ,'colsample_bytree':[1]
         ,'bagging_fraction':[1]
         ,'bagging_freq':[5]
+        ,'subsample_for_bin':[100,1000,1500]
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'learning_rate':[0.02],'n_estimators':[800,1000]},
             {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
             ]
+    # lgb general params
+#    Params['model_lgb_general_default_params'] = Params['model_lgb_default_params']
+#    Params['model_lgb_general_grid_params'] = {
+#        'learning_rate': [0.02]
+#        ,'n_estimators': [500]
+#        ,'num_leaves': [45]
+#        ,'objective' : ['regression']
+#        ,'feature_fraction':[0.6]
+#        ,'reg_alpha' : [1]
+#        ,'reg_lambda' : [1]
+#        ,'subsample':[1,0.8]
+#        ,'subsample_freq':[1,0.8]
+#        ,'colsample_bytree':[1,0.8]
+#        ,'bagging_fraction':[1]
+#        ,'bagging_freq':[5]
+#        }
+#    Params['model_lgb_general_grid_params_filter'] = [
+#            {'learning_rate':[0.05,0.08],'n_estimators':[1600,2000]}
+#            ]
     ########## Evaluation params
     Params['topK'] = 50 # 选股个数
     return Params

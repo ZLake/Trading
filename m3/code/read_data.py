@@ -39,7 +39,7 @@ def argParser():
 
     return args
 
-def read(split_num=1331,dest='../input/',train_test = 0):
+def read(split_num=1332,dest='../input/',train_test = 0):
     """
     split_num:data <= split_num.csv => training set
               data >  spllt_num.csv => testing  set

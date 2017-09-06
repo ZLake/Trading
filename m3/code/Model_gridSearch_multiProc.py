@@ -232,5 +232,5 @@ def training(Params,num_process = 2):
         
 if __name__ == "__main__":
     Params = get_params2()
-    training(Params,num_process=2)
+    training(Params,num_process=4)
     print ("Finished...")

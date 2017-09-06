@@ -35,10 +35,18 @@ def init_model_lgb(default_param,rng,num_threads):
     clf.set_params(**default_param)
     return clf
 
+def init_model_lgb_general(default_param,rng,num_threads):
+    print('number of thread in training lgb_general:{}'.format(num_threads))
+    clf = lgb.LGBMModel(objective='regression'
+                        ,n_jobs = num_threads)
+    clf.set_params(**default_param)
+    return clf
+
 def get_model(model_name,default_param,rng,num_threads):
     switcher = {
         'lasso': init_lasso,
-        'model_lgb': init_model_lgb
+        'model_lgb': init_model_lgb,
+        'model_lgb_general': init_model_lgb_general
         }        
     # Get the function from switcher dictionary
     model_initializer = switcher.get(model_name, lambda: "nothing")
