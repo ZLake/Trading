@@ -46,21 +46,21 @@ def training():
         num_threads = -1
     else:
         num_threads = multiprocessing.cpu_count()
-    # get dataset filename
-    train_name_raw = Params['train_name_raw']
-    test_name_raw =Params['test_name_raw']
-    
-    train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
-    test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    print("The raw train data size is : {} ".format(train.shape))
-    print("The raw test data size is : {} ".format(test.shape))
 #    train= dd.read_csv('../input/*.csv')
 #    test = dd.read_csv('../input/*.csv')
     # 选择数据时间段：todo
     for start_time in Params['Train_start_time']:
+        # get dataset filename
+        train_name_raw = Params['train_name_raw']
+        test_name_raw =Params['test_name_raw']
+        
+        train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
+        test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
+        print("The raw train data size is : {} ".format(train.shape))
+        print("The raw test data size is : {} ".format(test.shape))
         if start_time > 0:
             drop_index = np.where(train['csv_index'].astype(int)<start_time)[0]
-            print("drop number:{}".format(len(drop_index)))
+            print("filter start_time < {},drop number:{}".format(start_time,len(drop_index)))
             if (len(drop_index))>0:
                 train_name_raw = str(start_time) + '_' + train_name_raw            
                 train.drop(np.where(train['csv_index'].astype(int)<start_time)[0], axis = 0,inplace=True)
