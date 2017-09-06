@@ -40,7 +40,7 @@ from models import get_model
 from evaluation import evaluate_test,store_result
 
 def training():
-    Params = get_params2()
+    Params = get_params()
     rng = np.random.RandomState(42)
     if multiprocessing.cpu_count() >=60:
         num_threads = -1

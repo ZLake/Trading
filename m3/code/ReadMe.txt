@@ -124,6 +124,38 @@ Grid:
             {'num_leaves':[75],'objective':['huber']},
             {'max_bin':[100],'objective':['huber']}
             ]
+:-------------------------
+# Test1.3: OD_None_Test_Algo_model_lgb_dataTime_bag_feaRatio
+Data time:-------------
+    Params['Train_start_time'] = [0,100,200]
+OD:--------------------
+None
+Model:-----------------
+Default:
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          #### found:
+                                          ,'reg_alpha':2
+                                          ,'reg_lambda':1
+                                          ,'max_bin':100
+                                          ,'n_estimators':1 # can be more
+                                          ,'learning_rate':0.02 # can be less
+                                          ,'num_leaves':45
+                                          } 
+Grid:
+    Params['model_lgb_grid_params'] = {
+            'bagging_fraction':[0.7,0.8,0.9]
+            ,'bagging_freq':[3,5,7]
+            ,'feature_fraction':[0.5,0.6,0.7]
+        }
+    Params['model_lgb_grid_params_filter'] = [
+            ]   
+    
+    
+    
     
     
 # Test2: OD_IF_Test_Algo_model_lgb: 测试IF OD及不同contamination, Undone
