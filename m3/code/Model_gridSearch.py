@@ -34,6 +34,7 @@ import os
 import warnings
 
 from params import get_params,get_params2,load_params_combs,update_params_combs
+from sample_weight import get_sample_weight
 from simple_functions import imp_print
 from outlier_detection import outlier_detection,outlier_detection_grid
 from models import get_model
@@ -46,10 +47,13 @@ def training():
         num_threads = -1
     else:
         num_threads = multiprocessing.cpu_count()
-#    train= dd.read_csv('../input/*.csv')
-#    test = dd.read_csv('../input/*.csv')
-    # 选择数据时间段：todo
+    # 选择数据时间段
     for start_time in Params['Train_start_time']:
+        #####################
+        # Read the data: 选择数据的时间段
+        #####################
+        imp_print("Data Loading...",40)
+        read_start = time.time()
         # get dataset filename
         train_name_raw = Params['train_name_raw']
         test_name_raw =Params['test_name_raw']
@@ -67,12 +71,13 @@ def training():
                 #check the numbers of samples and features
         print("The train data size after data cut but before dropping Id feature is : {} ".format(train.shape))
         print("The test data size before dropping Id feature is : {} ".format(test.shape))
-        #####################
-        # Read the data: 选择数据的时间段
-        #####################
-        imp_print("Data Loading...",40)
-        read_start = time.time()
-        
+
+        #如果需要sample_weight,这里产出
+        decay_param = Params['Decay_params']
+        if(Params['Sample_weight']):
+            print('Adding sample weight by Algo:{}'.format(Params['Decay_algo']))
+            sample_weight = get_sample_weight(train,'csv_index',Params['Decay_algo'],decay_param).set_index('cal_column_name')
+            sample_weight_final = pd.merge(train[train.columns[0:2]], sample_weight, how='left', left_on='csv_index', right_index=True)
         #Save the 'csv_index' column
         train_csv_index = train[train.columns[0]].copy()
         test_csv_index = test[train.columns[0]].copy()
@@ -122,27 +127,10 @@ def training():
             imp_print("Data Processing...",40)
             proc_start = time.time()
             #############
-        #    ntrain = train.shape[0]
-        #    ntest = test.shape[0]
             y_train = train[train.columns[0]].copy().values
             y_test = test[test.columns[0]].copy().values
-        #    all_data = pd.concat((train, test)).reset_index(drop=True)
-        #    y_all_data = all_data[all_data.columns[0]].values
             train.drop(train.columns[0], axis=1, inplace=True)
             test.drop(test.columns[0], axis=1, inplace=True)
-        #    all_data.drop(train.columns[0], axis=1, inplace=True)
-        #    del train,test
-        #    print("all_data size is : {}".format(all_data.shape))
-            # missing data
-        #    all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
-        #    all_data_na = all_data_na.drop(all_data_na[all_data_na == 0].index).sort_values(ascending=False)[:30]
-        #    missing_data = pd.DataFrame({'Missing Ratio' :all_data_na})
-        #    missing_data.head(20)
-        #    print("missing data column numbers:{}".format(missing_data.shape[0]))
-        #    if(missing_data.shape[0] == 0):
-        #        imp_print("no missing data, go to next step...")
-        #    else:
-        #        imp_print("Need filling missing data...")
         
             print('garbage collection:{}'.format(gc.collect()))
             # Outlier Detection
@@ -156,26 +144,25 @@ def training():
                                                                          ,num_threads = num_threads)
             else:
                 print('None outlier detection is applied...')
-        
-        #
             proc_end = time.time()
-            #
-        #    gc.collect()
-        #    if(gc.collect()>0):
-        #        print('garbage collection:')
-        #        print(gc.collect())
             #####################
             # Modeling: 建模
             #####################
             imp_print("Modeling...",40)
-            model_start = time.time()
-            # get the train and val and test data
+            model_start = time.time() 
+            # convert data format for training
             train = train.values
             test = test.values
             print('garbage collection:{}'.format(gc.collect()))
-        
+                
             #grid search params
             for algo in Params['algo']:
+                # check if sample weight is Ture and the algo supports:
+                if(Params['Sample_weight'] and (algo in Params['Sample_weight_algo'])):
+                    train = np.hstack([sample_weight_final['sample_weight'].values[:,np.newaxis],train])
+                else:
+                    print('No need sample_weight or the algo({}) does not support sample_weight'.format(algo))    
+                
                 # get algo param grid
                 algo_Grid_Params = Params[algo+'_grid_params']
                 algo_Grid_Params_filter = Params[algo+'_grid_params_filter']

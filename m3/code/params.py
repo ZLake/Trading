@@ -30,6 +30,11 @@ def get_params():
     # theme
     Params['theme'] = 'OD_None_Test_Algo_model_lgb_dataTime_bag_feaRatio'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
+    ########## Use Sample Weight
+    Params['Sample_weight'] = True
+    Params['Decay_algo'] = 'exp' # exp
+    Params['Decay_params'] = {'decay_constant':0.001}
+    Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
     ########## Select Train data start time
     Params['Train_start_time'] = [0,100,200]
     ########## Outlier detection params
