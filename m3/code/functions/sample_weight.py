@@ -14,6 +14,7 @@ def simple_minus(x,max_number):
 
 def exp_decay(x,max_number,decay_constant=0.001):
     return np.exp(-(max_number-x) * decay_constant)
+#    return  (0.5 - max_number + x)*2
 
 def get_sample_weight(train,cal_column_name,decay_algo,decay_param):
     """
@@ -21,7 +22,7 @@ def get_sample_weight(train,cal_column_name,decay_algo,decay_param):
     cal_column: 用于计算sample_weight的列名
     """
     result = pd.DataFrame(columns=['cal_column_name','sample_weight'])
-    cal_column = train[cal_column_name].unique();
+    cal_column = train.unique();
     cal_column.sort()
     max_number = cal_column[-1]
     params = {}

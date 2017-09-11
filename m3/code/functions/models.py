@@ -12,14 +12,14 @@ import lightgbm as lgb
 import xgboost as xgb
 
 
-def init_lasso(default_param,rng,num_threads):
+def init_lasso(default_param,rng,num_threads,need_sample_weight):
     clf = Pipeline(steps=[('scaler',StandardScaler(copy=True)),
                          ('lasso',Lasso(alpha = 0.01,random_state=rng,
                                         copy_X=False))])
     clf.set_params(**default_param)
     return clf
 
-def init_model_lgb(default_param,rng,num_threads):
+def init_model_lgb(default_param,rng,num_threads,need_sample_weight):
     print('number of thread in training lgb:{}'.format(num_threads))
 #    clf = lgb.LGBMRegressor(objective='regression',num_leaves=5,
 #                                      learning_rate=0.02, n_estimators=1500,
@@ -33,22 +33,25 @@ def init_model_lgb(default_param,rng,num_threads):
 #                                      )
     clf = lgb.LGBMRegressor(n_jobs = num_threads)
     clf.set_params(**default_param)
+#    if(need_sample_weight):
+#        clf.set_params(weight='0') #第一列是weight_column
     return clf
 
-def init_model_lgb_general(default_param,rng,num_threads):
-    print('number of thread in training lgb_general:{}'.format(num_threads))
-    clf = lgb.LGBMModel(objective='regression'
-                        ,n_jobs = num_threads)
-    clf.set_params(**default_param)
-    return clf
 
-def get_model(model_name,default_param,rng,num_threads):
+
+#def init_model_lgb_general(default_param,rng,num_threads):
+#    print('number of thread in training lgb_general:{}'.format(num_threads))
+#    clf = lgb.LGBMModel(objective='regression'
+#                        ,n_jobs = num_threads)
+#    clf.set_params(**default_param)
+#    return clf
+
+def get_model(model_name,default_param,rng,num_threads,sample_weight=False):
     switcher = {
         'lasso': init_lasso,
-        'model_lgb': init_model_lgb,
-        'model_lgb_general': init_model_lgb_general
+        'model_lgb': init_model_lgb
         }        
     # Get the function from switcher dictionary
     model_initializer = switcher.get(model_name, lambda: "nothing")
     
-    return model_initializer(default_param,rng,num_threads)
+    return model_initializer(default_param,rng,num_threads,sample_weight)

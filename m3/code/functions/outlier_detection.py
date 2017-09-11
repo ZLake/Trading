@@ -152,12 +152,12 @@ def outlier_detection_grid(train_name_raw,test_name_raw
             clf.set_params(**clf_params['LOF_Params'])
             clf.set_params(**clf_grid_param)
             # fit the model
-            train_pred_outliers = clf.fit_predict(train.values)
+            train_pred_outliers = clf.fit_predict(train)
             train_pred_outliers_df = pd.DataFrame()
             train_pred_outliers_df['LOF_outliers'] = train_pred_outliers
             train_pred_outliers_df.to_hdf('DataSet/'+train_name_proc,'train_LOF_outliers',append=False)
             # 去除test里的outlier
-            test_pred_outliers = clf.fit_predict(test.values)
+            test_pred_outliers = clf.fit_predict(test)
             test_pred_outliers_df = pd.DataFrame()
             test_pred_outliers_df['LOF_outliers'] = test_pred_outliers
             test_pred_outliers_df.to_hdf('DataSet/'+test_name_proc,'test_LOF_outliers',append=False)

@@ -112,9 +112,13 @@ def check_model_params(result_df,params,metric):
                 
     
 if __name__ == "__main__":
-    theme = 'OD_None_Test_Algo_model_lgb_rate_nTree_leave_loss_mbin'
-    train_name_raw = 'train_1200_1333.h5'
-    test_name_raw = 'test_1200_1333.h5'
+    theme = 'OD_None_Test_Algo_model_lgb_timeDecay_regularization'
+    train_name_raw = 'train_1332_1333.h5'
+    test_name_raw = 'test_1332_1333.h5'
+    start_time = 0
+    if start_time > 0:
+        train_name_raw = str(start_time) + '_' + train_name_raw                    
+
     result_df = get_result(theme,train_name_raw,test_name_raw)
     print('Possible params to watch:{}'.format(result_df.iloc[0]['estimator input params'].keys()))
     # check one parameter performance

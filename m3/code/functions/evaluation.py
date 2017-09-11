@@ -13,11 +13,7 @@ import os
 from time import localtime, strftime
 import warnings
 
-
-def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
-    # 每天计算分数最低top50，平均后再按天平均
-    model.fit(train,y_train)
-    y_test_pred = model.predict(test)
+def evaluation(y_test_pred, y_test,test_csv_index,topks):
     ##### mse Evaluation
     mse = mean_squared_error(y_test_pred, y_test)
     print("Test mse score: {:.10f}".format(mse))
@@ -53,15 +49,24 @@ def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10
             eval_df.loc[len(eval_df)] = [str(csv_index),topk,temp_avgLabel,temp_stdLabel
                                         ,temp_min,temp_max,temp_above_039,temp_under_039
                                         ,temp_simple_avg]
-#        del (temp_test,temp_test_sorted,temp_avgLabel,
-#            temp_stdLabel,temp_min,temp_max,temp_above_039,temp_under_039
-#                                        ,temp_simple_avg,temp_select)
-#    del (train,y_train,model,mse,y_test,y_test_pred,test_csv_index,
-#         test_withPred,csv_indexs)
     print('evaluate_test garbage collection:{}'.format(gc.collect()))
     return eval_df
 
-def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
+def evaluate_test_sampleWeight(model,train,y_train,test,y_test,test_csv_index
+                  ,sample_weight,topks=[50,30,10]):
+    model.fit(train,y_train,sample_weight = sample_weight)
+    y_test_pred = model.predict(test)
+    
+    return evaluation(y_test_pred, y_test,test_csv_index,topks)
+    
+def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
+    # 每天计算分数最低top50，平均后再按天平均
+    model.fit(train,y_train)
+    y_test_pred = model.predict(test)
+    
+    return evaluation(y_test_pred,y_test,test_csv_index,topks)
+
+def store_result(Params,algo_grid_param,algo,sample_weight_algo,sample_weight_param,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
     # store result
     temp_result = []   
     daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -77,6 +82,8 @@ def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,te
     else:
         temp_result.append(Params['Outlier_Detector'][Params['Outlier_Detector']['algo'] + '_'+'Params'])
         temp_result.append(Params['Outlier_Detector']['apply_on_test'])
+    temp_result.append(sample_weight_algo)
+    temp_result.append(sample_weight_param)
     temp_result.append(algo)    #'estimator algo'
     temp_result.append(algo_grid_param)      #'estimator input params'
     if(algo == 'lasso'):
@@ -116,6 +123,8 @@ def store_result(Params,algo_grid_param,algo,eval_df,estimator,train_name_raw,te
                                          ,'OD algo'
                                          ,'OD params'
                                          ,'OD apply_on_test'
+                                         ,'sample weight algo'
+                                         ,'sample weight params'
                                          ,'estimator algo'
                                          ,'estimator input params'
                                          ,'estimator all params'
