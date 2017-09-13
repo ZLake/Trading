@@ -28,12 +28,12 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'OD_None_Test_Algo_model_lgb_timeDecay_regularization'# 本次运行的目的
+    Params['theme'] = 'OD_None_Test_Algo_model_lgb_timeDecay_regularization2'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
     Params['Sample_weight'] = True
     Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0,0.0008,0.001,0.0012]} #0.0008,0.0012
+    Params['Decay_params'] = {'decay_constant':[0.0006,0.0007,0.0009]} #0.0008,0.0012
     Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
     ########## Select Train data start time
     Params['Train_start_time'] = [0] # 请从小到大输入，否则会出现问题

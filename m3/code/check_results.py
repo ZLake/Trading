@@ -113,8 +113,8 @@ def check_model_params(result_df,params,metric):
     
 if __name__ == "__main__":
     theme = 'OD_None_Test_Algo_model_lgb_timeDecay_regularization'
-    train_name_raw = 'train_1332_1333.h5'
-    test_name_raw = 'test_1332_1333.h5'
+    train_name_raw = 'train_1200_1333.h5'
+    test_name_raw = 'test_1200_1333.h5'
     start_time = 0
     if start_time > 0:
         train_name_raw = str(start_time) + '_' + train_name_raw                    
@@ -122,8 +122,7 @@ if __name__ == "__main__":
     result_df = get_result(theme,train_name_raw,test_name_raw)
     print('Possible params to watch:{}'.format(result_df.iloc[0]['estimator input params'].keys()))
     # check one parameter performance
-    result_df_analysis = check_model_params(result_df,['bagging_fraction','bagging_freq', 'colsample_bytree', 'feature_fraction','subsample', 'subsample_freq'],['top50_avg'])
-    
+    result_df_analysis = check_model_params(result_df,['reg_lambda', 'reg_alpha'],['top50_avg'])    
 #    print (tabulate(result_df_analysis, headers='keys', tablefmt='psql'))
     
     print ("Finished...")

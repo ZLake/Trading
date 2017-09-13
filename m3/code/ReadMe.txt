@@ -154,7 +154,42 @@ Grid:
     Params['model_lgb_grid_params_filter'] = [
             ]   
     
-    
+:-------------------------
+# Test1.4: OD_None_Test_Algo_model_lgb_timeDecay_regularization
+Data time:-------------
+    Params['Train_start_time'] = [0] 
+Time Decay:------------
+    Params['Sample_weight'] = True
+    Params['Decay_algo'] = 'exp' # exp
+    Params['Decay_params'] = {'decay_constant':[0,0.0008,0.001,0.0012]} #0.0008,0.0012
+OD:--------------------
+None
+Model:-----------------
+Default:
+    Params['model_lgb_default_params'] = {'objective':'regression'
+                                          ,'boosting_type' : 'gbdt'
+                                          ,'save_binary':True
+                                          ,'min_data_in_leaf':100
+                                          ,'min_sum_hessian_in_leaf':10
+                                          #### found:
+                                          ,'reg_alpha':2
+                                          ,'reg_lambda':1
+                                          ,'max_bin':100  # can be more
+                                          ,'n_estimators': 2000# can be more
+                                          ,'learning_rate':0.02 # can be less
+                                          ,'num_leaves':45
+                                          ,'bagging_fraction':0.8
+                                          ,'bagging_freq':5
+                                          ,'feature_fraction':0.6
+                                          } 
+Grid:
+    Params['model_lgb_grid_params'] = {
+            'reg_alpha':[1,2,3]
+            ,'reg_lambda':[0.5,1,2]
+
+        }
+    Params['model_lgb_grid_params_filter'] = [
+            ]   
     
     
 # =====================================================================
