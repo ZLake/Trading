@@ -73,7 +73,7 @@ def training():
         print("The test data size before dropping Id feature is : {} ".format(test.shape))
 
         #如果需要sample_weight,这里产出
-             #Save the 'csv_index' column
+        #Save the 'csv_index' column
         train_csv_index = train[train.columns[0]].copy()
         test_csv_index = test[train.columns[0]].copy()
         #Save the 'Id' column

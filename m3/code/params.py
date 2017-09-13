@@ -76,7 +76,7 @@ def get_params():
                                           #### found:
                                           ,'reg_alpha':2
                                           ,'reg_lambda':1
-                                          ,'max_bin':100
+                                          ,'max_bin':100  # can be more
                                           ,'n_estimators': 2000# can be more
                                           ,'learning_rate':0.02 # can be less
                                           ,'num_leaves':45
