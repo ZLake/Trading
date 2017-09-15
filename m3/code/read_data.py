@@ -237,9 +237,10 @@ def restore_single_chunks(file_list,proc_idx,chunk_prefix):
 #    print('chunk {} size:{}'.format(proc_idx,chunk_data.shape))
 #    print('chunk {} written in, file_list finished size:{}'.format(len([x for x in file_list if x is not None])))
 #    l.release()
-    print('done...')
+    return chunk_data
     
-def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
+def restore_with_chunks_multiProc(file_name,dest='DataSet/',chunk_size = 100):
+    # 还有一些问题，用不了
     files_str = check_output(["ls", dest]).decode("utf-8")
     files_list = [file_str for file_str in files_str.strip('\n').split('\n')]
     files_list.sort()
@@ -247,8 +248,7 @@ def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
     file_str_filter = [x for x in files_list if chunk_prefix in str(x)]
     print('{} is restored from:\n{}'.format(file_name,'\n'.join(file_str_filter)))
     num_chunks = len(file_str_filter)
-    manager = Manager()
-    file_list = manager.list([None] * num_chunks)
+    file_list = Manager().list([None] * num_chunks)
     param = {}
     param['chunk_prefix'] = chunk_prefix
     restore_single_chunks_partial = functools.partial(restore_single_chunks,**param) 
@@ -257,7 +257,7 @@ def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
     l = multiprocessing.Lock()
     pool = multiprocessing.Pool(processes=len(file_str_filter),initializer=init, initargs=(l,))
     for proc_idx in range(num_chunks):
-        pool.apply_async(restore_single_chunks_partial, args=(file_list,proc_idx))
+        pool.apply_async(restore_single_chunks_partial, args=(proc_idx,))
     pool.close()
     pool.join()
     data_final = pd.concat(file_list,ignore_index=True)
@@ -266,13 +266,31 @@ def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
     gc.collect()
     return data_final
 
+def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
+    files_str = check_output(["ls", dest]).decode("utf-8")
+    files_list = [file_str for file_str in files_str.strip('\n').split('\n')]
+    files_list.sort()
+    chunk_prefix = '{}_{}_'.format(file_name.strip('.h5'),chunk_size)
+    file_str_filter = [x for x in files_list if chunk_prefix in str(x)]
+    print('{} is restored from:\n{}'.format(file_name,'\n'.join(file_str_filter)))
+    num_chunks = len(file_str_filter)
+    file_list = list([None] * num_chunks)
+    print('len:{}'.format(len(file_list)))
+#    restore_single_chunks_partial(0)
+    for proc_idx in range(num_chunks):
+        restore_single_chunks(file_list,proc_idx,chunk_prefix)
+    data_final = pd.concat(file_list,ignore_index=True)
+    print('data_final shape:{}'.format(data_final.shape))
+    print('Restore data done...')
+    gc.collect()
+    return data_final
 if __name__ == "__main__":
     args = argParser()
     print("args len:{}".format(len(args)))
     if (len(args)>=1):
         read_withChunks(**args)
     else:
-#        read_withChunks()
+        read_withChunks()
         restore_with_chunks('train_1332_1333.h5')
         
 
