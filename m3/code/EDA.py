@@ -10,6 +10,8 @@ sys.path.insert(0, 'functions')
 
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 import time
 
@@ -26,7 +28,6 @@ def EDA():
     test_name_raw =Params['test_name_raw']
     train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    all_data = pd.concat([train,test])
     #Save the 'csv_index' column
     train_csv_index = train[train.columns[0]].copy()
     test_csv_index = test[train.columns[0]].copy()
@@ -42,14 +43,18 @@ def EDA():
     print('Train set contain stock number:{}'.format(len(train_stocks)))
     print('Test set contain stock number:{}'.format(len(test_stocks)))
     print('Train & Test set both contain stock number:{}'.format(len(set(train_stocks)&set(test_stocks))))
+    # 计算train里面有过的和train里面没有的stock在test的均值
+    test_in = test[['csv_index', 2]][test[test.columns[1]].isin(set(train_stocks)&set(test_stocks))]
+    test_out = test[['csv_index', 2]][~test[test.columns[1]].isin(set(train_stocks)&set(test_stocks))]
+
     # 计算每天(全量数据)的target 均值，std
     # 这里是全部数据，包含测试，因为通过csv_index区分了不同的集合
-    market_df = all_data[['csv_index', 2]].groupby('csv_index').agg([np.mean, np.std, len]).reset_index()
+    market_df_test_out = test_out[['csv_index', 2]].groupby('csv_index').agg([np.mean, np.std, len]).reset_index()
     # plot 
-    t      = market_df['csv_index'].astype(int)
-    y_mean = np.array(market_df[2]['mean'])
-    y_std  = np.array(market_df[2]['std'])
-    n      = np.array(market_df[2]['len'])
+    t      = market_df_test_out['csv_index'].astype(int)
+    y_mean = np.array(market_df_test_out[2]['mean'])
+    y_std  = np.array(market_df_test_out[2]['std'])
+    n      = np.array(market_df_test_out[2]['len'])
     
     plt.figure()
     plt.plot(t, y_mean, '.')

@@ -97,6 +97,7 @@ def read(split_num=1332,dest='../input/',train_test = 0):
         test = pd.concat(test_list,ignore_index=True)
 
     imp_print2("End Reading Data",11)
+    gc.collect()
     if(do_train):
         print ("train set size:{}".format(train.shape))
     if(do_test):
