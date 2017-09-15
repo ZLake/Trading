@@ -230,7 +230,9 @@ def init(l):
     lock = l
 
 def restore_single_chunks(file_list,proc_idx,chunk_prefix):
+    print('chunk {} from file:{}'.format(proc_idx,'DataSet/'+ chunk_prefix+str(proc_idx)+'.h5'))
     chunk_data = pd.read_hdf('DataSet/'+ chunk_prefix+str(proc_idx)+'.h5',engine = 'c',memory_map=True)
+    print('chunk {} size:{}'.format(proc_idx,chunk_data.shape))
     file_list[proc_idx] = chunk_data
     print('done...')
     
