@@ -34,6 +34,7 @@ import os
 import warnings
 
 from params import get_params,get_params2,load_params_combs,update_params_combs,paramGridSearch
+from read_data import restore_with_chunks
 from sample_weight import get_sample_weight
 from simple_functions import imp_print
 from outlier_detection import outlier_detection,outlier_detection_grid
@@ -58,7 +59,8 @@ def training():
         train_name_raw = Params['train_name_raw']
         test_name_raw =Params['test_name_raw']
         
-        train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
+#        train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
+        train = restore_with_chunks(train_name_raw)
         test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
         print("The raw train data size is : {} ".format(train.shape))
         print("The raw test data size is : {} ".format(test.shape))
