@@ -157,6 +157,7 @@ def read_withChunks(split_num=1332,dest='../input/',train_test = 0,chunk_size=10
     chunk_size: 每chunk_size个csv存为一个.hs文件
     """
     imp_print2("Running Info",15)
+    print("Read data with chunks...")
     print("CSV data files loc:"+dest)
     print("Training set:data <= "+str(split_num)+".csv")
     print("Testing  set:data >  "+str(split_num)+".csv")
