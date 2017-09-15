@@ -23,7 +23,7 @@ def get_params():
     # data files
     if(multiprocessing.cpu_count() >=60):
         Params['train_name_raw'] = 'train_1200_1333.h5'
-        Params['test_name_raw'] = 'test_1200_1333.h5'
+        Params['test_name_raw'] = 'test_1253_1333.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
