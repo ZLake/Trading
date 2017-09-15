@@ -28,7 +28,7 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'read_data_multiproc_test'# 本次运行的目的
+    Params['theme'] = 'oldTrain_newTest'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
     Params['Sample_weight'] = True
@@ -85,8 +85,8 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'reg_alpha':[2]
-            ,'reg_lambda':[1]
+            'reg_alpha':[1,2,3]
+            ,'reg_lambda':[0.5,1,2]
 
         }
     Params['model_lgb_grid_params_filter'] = [
