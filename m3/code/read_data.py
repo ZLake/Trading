@@ -39,7 +39,12 @@ def argParser():
         args["split_num"] = int(sys.argv[1])
         args["dest"] = sys.argv[2]
         args["train_test"] = int(sys.argv[3])
-    elif len(sys.argv)>4:
+    elif len(sys.argv)==5:
+        args["split_num"] = int(sys.argv[1])
+        args["dest"] = sys.argv[2]
+        args["train_test"] = int(sys.argv[3])
+        args["chunk_size"] = int(sys.argv[4])
+    elif len(sys.argv)>5:
         raise Exception("more then 2 args, only split_num and dest are required")
 
     return args
@@ -259,9 +264,9 @@ if __name__ == "__main__":
     args = argParser()
     print("args len:{}".format(len(args)))
     if (len(args)>=1):
-        read(**args)
+        read_withChunks(**args)
     else:
-#        read_withChunks()
-        restore_with_chunks('train_1332_1333.h5')
+        read_withChunks()
+#        restore_with_chunks('train_1332_1333.h5')
         
 
