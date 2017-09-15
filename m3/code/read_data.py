@@ -92,6 +92,8 @@ def read(split_num=1332,dest='../input/',train_test = 0):
             train_list.append(temp_train)
             print('Training set now processing: '+ str(files_list[i])+".csv, sample number: "+ str(len(temp_train)))
         train = pd.concat(train_list,ignore_index=True)
+        del train_list
+        print('gc collect:{}'.format(gc.collect()))
     # test
     if(do_test):
         imp_print2("Test set",3)
@@ -288,9 +290,11 @@ if __name__ == "__main__":
     args = argParser()
     print("args len:{}".format(len(args)))
     if (len(args)>=1):
-        read_withChunks(**args)
+#        read_withChunks(**args)
+        read(**args)
     else:
-        read_withChunks()
-        restore_with_chunks('train_1332_1333.h5')
+#        read_withChunks()
+#        restore_with_chunks('train_1332_1333.h5')
+        read()
         
 
