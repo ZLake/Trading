@@ -232,8 +232,11 @@ def init(l):
 def restore_single_chunks(file_list,proc_idx,chunk_prefix):
     print('chunk {} from file:{}'.format(proc_idx,'DataSet/'+ chunk_prefix+str(proc_idx)+'.h5'))
     chunk_data = pd.read_hdf('DataSet/'+ chunk_prefix+str(proc_idx)+'.h5',engine = 'c',memory_map=True)
-    print('chunk {} size:{}'.format(proc_idx,chunk_data.shape))
+#    l.acquire()
     file_list[proc_idx] = chunk_data
+#    print('chunk {} size:{}'.format(proc_idx,chunk_data.shape))
+#    print('chunk {} written in, file_list finished size:{}'.format(len([x for x in file_list if x is not None])))
+#    l.release()
     print('done...')
     
 def restore_with_chunks(file_name,dest='DataSet/',chunk_size = 100):
@@ -269,7 +272,7 @@ if __name__ == "__main__":
     if (len(args)>=1):
         read_withChunks(**args)
     else:
-        read_withChunks()
-#        restore_with_chunks('train_1332_1333.h5')
+#        read_withChunks()
+        restore_with_chunks('train_1332_1333.h5')
         
 
