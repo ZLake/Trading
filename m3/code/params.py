@@ -28,7 +28,7 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'newTrain_newTest'# 本次运行的目的
+    Params['theme'] = 'newTrain_newTest_noTimeDecay'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
     Params['Sample_weight'] = True
