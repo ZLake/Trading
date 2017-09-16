@@ -33,7 +33,7 @@ def get_params():
     ########## Use Sample Weight
     Params['Sample_weight'] = True
     Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0.0008]} #0.0008,0.0012
+    Params['Decay_params'] = {'decay_constant':[0]} #0.0008,0.0012
     Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
     ########## Select Train data start time
     Params['Train_start_time'] = [0] # 请从小到大输入，否则会出现问题
