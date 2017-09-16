@@ -22,13 +22,13 @@ def get_params():
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1200_1333.h5'
+        Params['train_name_raw'] = 'train_1253_1333.h5'
         Params['test_name_raw'] = 'test_1253_1333.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'oldTrain_newTest'# 本次运行的目的
+    Params['theme'] = 'newTrain_newTest'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
     Params['Sample_weight'] = True
