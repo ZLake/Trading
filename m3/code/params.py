@@ -28,10 +28,10 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'newTrain_newTest_noTimeDecay'# 本次运行的目的
+    Params['theme'] = 'newTrain_newTest_leaf_regularization'# 本次运行的目的
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
-    Params['Sample_weight'] = True
+    Params['Sample_weight'] = False
     Params['Decay_algo'] = 'exp' # exp
     Params['Decay_params'] = {'decay_constant':[0]} #0.0008,0.0012
     Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
@@ -74,7 +74,7 @@ def get_params():
                                           ,'min_data_in_leaf':100
                                           ,'min_sum_hessian_in_leaf':10
                                           #### found:
-                                          ,'reg_alpha':2
+                                          ,'reg_alpha':3
                                           ,'reg_lambda':1
                                           ,'max_bin':100  # can be more
                                           ,'n_estimators': 2000# can be more
@@ -85,9 +85,9 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'reg_alpha':[1,2,3]
-            ,'reg_lambda':[0.5,1,2]
-
+            'n_estimators':[2000,2500]
+            ,'min_data_in_leaf':[20,100,200]
+            ,'min_sum_hessian_in_leaf':[10,50,100]
         }
     Params['model_lgb_grid_params_filter'] = [
 #            {'n_estimators':[2500],'min_data_in_leaf':[200]}
