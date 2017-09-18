@@ -56,17 +56,29 @@ def evaluate_test_sampleWeight(model,train,y_train,test,y_test,test_csv_index
                   ,sample_weight,topks=[50,30,10]):
     model.fit(train,y_train,sample_weight = sample_weight)
     y_test_pred = model.predict(test)
-    
-    return evaluation(y_test_pred, y_test,test_csv_index,topks)
+    if hasattr(model, 'feature_importances_'):
+        feature_importance = model.feature_importances_
+    else:
+        feature_importance = None
+        
+    return evaluation(y_test_pred, y_test,test_csv_index,topks),feature_importance
     
 def evaluate_test(model,train,y_train,test,y_test,test_csv_index,topks=[50,30,10]):
     # 每天计算分数最低top50，平均后再按天平均
     model.fit(train,y_train)
     y_test_pred = model.predict(test)
-    
-    return evaluation(y_test_pred,y_test,test_csv_index,topks)
+    if hasattr(model, 'feature_importances_'):
+        feature_importance = model.feature_importances_
+    else:
+        feature_importance = None
 
-def store_result(Params,algo_grid_param,algo,sample_weight_algo,sample_weight_param,eval_df,estimator,train_name_raw,test_name_raw,theme,cost_time):
+    return evaluation(y_test_pred,y_test,test_csv_index,topks),feature_importance
+
+def store_result(Params,algo_grid_param,algo
+                 ,sample_weight_algo,sample_weight_param
+                 ,eval_df,estimator,train_name_raw,test_name_raw
+                 ,theme,cost_time
+                 ,feature_importance):
     # store result
     temp_result = []   
     daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -104,6 +116,7 @@ def store_result(Params,algo_grid_param,algo,sample_weight_algo,sample_weight_pa
     temp_result.append(eval_df['under_039'][eval_df['topk']==10].mean())
     temp_result.append(eval_df)
     temp_result.append(eval_df['simple_avg'].mean())
+    temp_result.append(feature_importance)
     #读取之前的记录
     # Generate file name for storage
     file_name = train_name_raw.strip('.h5').strip('train_')
@@ -138,7 +151,8 @@ def store_result(Params,algo_grid_param,algo,sample_weight_algo,sample_weight_pa
                                          ,'top30_under039_avg'
                                          ,'top10_under039_avg'
                                          ,'details'              #存eval_df
-                                         ,'simple_avg']) 
+                                         ,'simple_avg'
+                                         ,'feature_importance']) 
         final_result.loc[len(final_result)] = temp_result
     with warnings.catch_warnings():
             warnings.simplefilter("ignore")

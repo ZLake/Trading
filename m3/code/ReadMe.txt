@@ -155,13 +155,13 @@ Grid:
             ]   
     
 :-------------------------
-# Test1.4: OD_None_Test_Algo_model_lgb_timeDecay_regularization
+# Test1.4: OD_None_Test_Algo_model_lgb_timeDecay_regularization_$  # $ = 1,2 两个版本，不同Decay_params
 Data time:-------------
     Params['Train_start_time'] = [0] 
 Time Decay:------------
     Params['Sample_weight'] = True
     Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0,0.0008,0.001,0.0012]} #0.0008,0.0012
+    Params['Decay_params'] = {'decay_constant':[0,0.0006,0.0007,0.0008,0.0009,0.001,0.0012]} #0.0008,0.0012
 OD:--------------------
 None
 Model:-----------------
@@ -192,13 +192,15 @@ Grid:
             ]   
     
 :-------------------------
-# Test1.5: OD_None_Test_Algo_model_lgb_timeDecay_regularization2
+# Test1.5: new,old train,test data verification:new_train > old train on new_test
+# Test1.5:
+Data:
+    Params['train_name_raw'] = 'train_1253_1333.h5'
+    Params['test_name_raw'] = 'test_1253_1333.h5'
 Data time:-------------
     Params['Train_start_time'] = [0] 
 Time Decay:------------
-    Params['Sample_weight'] = True
-    Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0,0.0006,0.0007,0.0009]} #0.0008,0.0012
+    Params['Sample_weight'] = False
 OD:--------------------
 None
 Model:-----------------
@@ -209,7 +211,7 @@ Default:
                                           ,'min_data_in_leaf':100
                                           ,'min_sum_hessian_in_leaf':10
                                           #### found:
-                                          ,'reg_alpha':2
+                                          ,'reg_alpha':3
                                           ,'reg_lambda':1
                                           ,'max_bin':100  # can be more
                                           ,'n_estimators': 2000# can be more
@@ -221,12 +223,19 @@ Default:
                                           } 
 Grid:
     Params['model_lgb_grid_params'] = {
-            'reg_alpha':[1,2,3]
-            ,'reg_lambda':[0.5,1,2]
-
+            'n_estimators':[2000,2500]
+            ,'min_data_in_leaf':[20,100,200]
+            ,'min_sum_hessian_in_leaf':[10,50,100]
         }
     Params['model_lgb_grid_params_filter'] = [
-            ]       
+            ]      
+    
+# undone ideas:
+select feature with imp
+normalized feature and label by day    
+    
+    
+    
 # =====================================================================
 # Test2: OD_IF_Test_Algo_model_lgb: 测试IF OD及不同contamination, Undone
 OD:--------------------

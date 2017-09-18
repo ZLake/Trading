@@ -33,7 +33,7 @@ import gc
 import os
 import warnings
 
-from params import get_params,get_params2,load_params_combs,update_params_combs,paramGridSearch
+from params import get_params,load_params_combs,update_params_combs,paramGridSearch
 from read_data import restore_with_chunks
 from sample_weight import get_sample_weight
 from simple_functions import imp_print
@@ -74,6 +74,10 @@ def training():
         print("The train data size after data cut but before dropping Id feature is : {} ".format(train.shape))
         print("The test data size before dropping Id feature is : {} ".format(test.shape))
 
+        if(Params['Normalization_day_label']):
+            train_label_stat = train.groupby([train.columns[0]])[train.columns[2]].agg(['mean','std'])
+            train_label_withStat = pd.merge(train[train.columns[[0,2]]],train_label_stat,how='left',left_on = 'csv_index',right_index=True)
+            train[train.columns[[2]]] = (train_label_withStat[train.columns[[2]]].subtract(train_label_withStat['mean'].values)).divide(train_label_withStat['std'].values)
         #如果需要sample_weight,这里产出
         #Save the 'csv_index' column
         train_csv_index = train[train.columns[0]].copy()
@@ -192,10 +196,10 @@ def training():
                         #####################
                         imp_print("Testing...",40)    
                         if(Params['Sample_weight'] and (algo in Params['Sample_weight_algo'])):
-                            eval_df = evaluate_test_sampleWeight(estimator,train,y_train,test,y_test,test_csv_index
+                            eval_df,feature_importance = evaluate_test_sampleWeight(estimator,train,y_train,test,y_test,test_csv_index
                                                 ,sample_weight = sample_weight_final['sample_weight'].values)
                         else:
-                            eval_df = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
+                            eval_df,feature_importance = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
                         
                 
                         print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
@@ -207,7 +211,8 @@ def training():
                         store_result(Params,algo_grid_param,algo
                                      ,Params['Decay_algo'],decay_param
                                      ,eval_df,estimator
-                                     ,train_name_raw,test_name_raw,Params['theme'],cost_time)
+                                     ,train_name_raw,test_name_raw,Params['theme'],cost_time
+                                     ,feature_importance)
                         print('Cost time:{}'.format(cost_time))
                         #update done info for grid search:algo
                         update_params_combs(Params['theme'],train_name_raw
