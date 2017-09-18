@@ -290,8 +290,8 @@ if __name__ == "__main__":
     args = argParser()
     print("args len:{}".format(len(args)))
     if (len(args)>=1):
-#        read_withChunks(**args)
-        read(**args)
+        read_withChunks(**args)
+#        read(**args)
     else:
 #        read_withChunks()
 #        restore_with_chunks('train_1332_1333.h5')
