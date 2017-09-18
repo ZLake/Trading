@@ -28,7 +28,7 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'Test'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch'# 本次运行的目的
     ## Preprocessing 
     # Normalization by day
     # label by day
