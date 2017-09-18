@@ -22,8 +22,8 @@ def get_params():
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1253_1333.h5'
-        Params['test_name_raw'] = 'test_1253_1333.h5'
+        Params['train_name_raw'] = 'train_1268_1311.h5'
+        Params['test_name_raw'] = 'test_1268_1311.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
@@ -91,9 +91,10 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[20]
-            ,'min_data_in_leaf':[20]
-            ,'min_sum_hessian_in_leaf':[10]
+            'n_estimators':[2000,2400]
+            ,'learning_rate':[0.02,0.016]
+            ,'num_leaves':[45,60]
+            ,'reg_alpha':[2,3]            
         }
     Params['model_lgb_grid_params_filter'] = [
 #            {'n_estimators':[2500],'min_data_in_leaf':[200]}
