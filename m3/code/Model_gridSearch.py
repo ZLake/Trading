@@ -74,10 +74,10 @@ def training():
         print("The train data size after data cut but before dropping Id feature is : {} ".format(train.shape))
         print("The test data size before dropping Id feature is : {} ".format(test.shape))
 
-        if(Params['Normalization_day_label']):
-            train_label_stat = train.groupby([train.columns[0]])[train.columns[2]].agg(['mean','std'])
-            train_label_withStat = pd.merge(train[train.columns[[0,2]]],train_label_stat,how='left',left_on = 'csv_index',right_index=True)
-            train[train.columns[[2]]] = (train_label_withStat[train.columns[[2]]].subtract(train_label_withStat['mean'].values)).divide(train_label_withStat['std'].values)
+#        if(Params['Normalization_day_label']):
+#            train_label_stat = train.groupby([train.columns[0]])[train.columns[2]].agg(['mean','std'])
+#            train_label_withStat = pd.merge(train[train.columns[[0,2]]],train_label_stat,how='left',left_on = 'csv_index',right_index=True)
+#            train[train.columns[[2]]] = (train_label_withStat[train.columns[[2]]].subtract(train_label_withStat['mean'].values)).divide(train_label_withStat['std'].values)
         #如果需要sample_weight,这里产出
         #Save the 'csv_index' column
         train_csv_index = train[train.columns[0]].copy()
