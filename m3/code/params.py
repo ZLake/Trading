@@ -82,7 +82,7 @@ def get_params():
                                           #### found:
                                           ,'reg_alpha':3
                                           ,'reg_lambda':1
-                                          ,'max_bin':100  # can be more
+                                          ,'max_bin':50  # can be more
                                           ,'n_estimators': 2000# can be more
                                           ,'learning_rate':0.02 # can be less
                                           ,'num_leaves':45
@@ -91,10 +91,9 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[2000,2400]
-            ,'learning_rate':[0.02,0.016]
+            'n_estimators':[1000,1500]
+            ,'learning_rate':[0.04,0.06]
             ,'num_leaves':[45,60]
-            ,'reg_alpha':[2,3]            
         }
     Params['model_lgb_grid_params_filter'] = [
 #            {'n_estimators':[2500],'min_data_in_leaf':[200]}
