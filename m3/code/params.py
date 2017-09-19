@@ -28,7 +28,7 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # theme
-    Params['theme'] = 'New_data_gridSearch_2'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch_3'# 本次运行的目的
     ## Preprocessing 
     # Normalization by day
     # label by day
@@ -91,12 +91,12 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[1000,1500]
-            ,'learning_rate':[0.04,0.06]
-            ,'num_leaves':[45,60]
+            'n_estimators':[1000,1250,1500]
+            ,'learning_rate':[0.02,0.04,0.06]
+            ,'num_leaves':[30,45,60,70]
         }
     Params['model_lgb_grid_params_filter'] = [
-#            {'n_estimators':[2500],'min_data_in_leaf':[200]}
+            {'n_estimators':[1000,1500],'learning_rate':[0.04,0.06],'num_leaves':[45,60]}
 #            ,{'n_estimators':[2500],'min_sum_hessian_in_leaf':[20]}
 #            ,{'n_estimators':[2500],'reg_alpha':[1]}
 #            ,{'n_estimators':[2500],'reg_lambda':[0.5]}
