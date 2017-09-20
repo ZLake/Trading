@@ -58,7 +58,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
             test_label_withStat = pd.merge(data[data.columns[[0,idx]]],test_label_stat[column_name],how='left',left_on = 'csv_index',right_index=True)
             data[column_name] = (test_label_withStat[column_name].sub(test_label_withStat['mean'])).divide(test_label_withStat['std'])
             counter +=1
-            if counter %100 == 0:
+            if counter %1000 == 0:
                 print('Now processing column:{}'.format(column_name))
         if not os.path.exists("DataSet/"):
             os.makedirs("DataSet/")  
@@ -91,9 +91,9 @@ if __name__ == "__main__":
     Params = get_params()
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
-    train = restore_with_chunks(train_name_raw)
+#    train = restore_with_chunks(train_name_raw)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-#    preprocess_withChunks(train_name_raw)
+    preprocess_withChunks(train_name_raw)
     gc.collect()
     normalize_fea_label(test,test_name_raw,train_mode=1)
     gc.collect()
