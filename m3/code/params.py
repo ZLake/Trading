@@ -96,7 +96,7 @@ def get_params():
             ,'num_leaves':[30,45,60,70]
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'n_estimators':[1000,1500],'learning_rate':[0.04,0.06],'num_leaves':[45,60]}
+#            {'n_estimators':[1000,1500],'learning_rate':[0.04,0.06],'num_leaves':[45,60]}
 #            ,{'n_estimators':[2500],'min_sum_hessian_in_leaf':[20]}
 #            ,{'n_estimators':[2500],'reg_alpha':[1]}
 #            ,{'n_estimators':[2500],'reg_lambda':[0.5]}
