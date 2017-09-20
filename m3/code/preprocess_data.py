@@ -10,6 +10,8 @@ from params import get_params
 from read_data import restore_with_chunks
 import numpy as np
 import os,gc
+from subprocess import check_output
+
 
 # 处理data，并保存起来
 def normalize_fea_label(data,fname,train_mode = 0):
@@ -68,14 +70,31 @@ def normalize_fea_label(data,fname,train_mode = 0):
     print('Finshed...')
     
     
-
+def preprocess_withChunks(file_name,dest='DataSet/',chunk_size = 100):
+    files_str = check_output(["ls", dest]).decode("utf-8")
+    files_list = [file_str for file_str in files_str.strip('\n').split('\n')]
+    files_list.sort()
+    chunk_prefix = '{}_{}_'.format(file_name.strip('.h5'),chunk_size)
+    file_str_filter = [x for x in files_list if chunk_prefix in str(x)]
+    print('{} is restored from:\n{}'.format(file_name,'\n'.join(file_str_filter)))
+    num_chunks = len(file_str_filter)
+    file_list = list([None] * num_chunks)
+    print('len:{}'.format(len(file_list)))
+    for proc_idx in range(num_chunks):
+        fname = 'DataSet/'+ chunk_prefix+str(proc_idx)+'.h5'
+        chunk_data = pd.read_hdf('DataSet/'+ chunk_prefix+str(proc_idx)+'.h5',engine = 'c',memory_map=True)
+        normalize_fea_label(chunk_data,chunk_prefix+str(proc_idx)+'.h5',train_mode=0)
+        del chunk_data
+        gc.collect()
+    print('done...')
+    
 if __name__ == "__main__":
     Params = get_params()
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
     train = restore_with_chunks(train_name_raw)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    normalize_fea_label(train,train_name_raw,train_mode=0)
+    preprocess_withChunks(train_name_raw)
     gc.collect()
     normalize_fea_label(test,test_name_raw,train_mode=1)
     gc.collect()
