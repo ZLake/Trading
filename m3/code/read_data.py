@@ -293,8 +293,8 @@ if __name__ == "__main__":
         read_withChunks(**args)
 #        read(**args)
     else:
-#        read_withChunks()
+        read_withChunks()
 #        restore_with_chunks('train_1332_1333.h5')
-        read()
+#        read()
         
 
