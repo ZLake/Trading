@@ -58,7 +58,9 @@ def training():
         # get dataset filename
         train_name_raw = Params['train_name_raw']
         test_name_raw =Params['test_name_raw']
-        
+        if (Params['Proc']):
+            train_name_raw = train_name_raw.split('.')[0]+Params['procSuffix']+'.h5'
+            test_name_raw = test_name_raw.split('.')[0]+Params['procSuffix']+'.h5'
 #        train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
         train = restore_with_chunks(train_name_raw)
         test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)

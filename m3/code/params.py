@@ -27,6 +27,9 @@ def get_params():
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
+    # preprocess suffix
+    Params['Proc'] = True
+    Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
     # theme
     Params['theme'] = 'New_data_gridSearch_3'# 本次运行的目的
     ## Preprocessing 

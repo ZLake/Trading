@@ -25,7 +25,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
     if(train_mode == 0):
         print('Train mode:')
         # 统计数据，为归一化做准备
-        file_name = fname.strip('.h5').strip('train_')
+        file_name = fname.split('.')[0].strip('train_')
         if not os.path.exists('Result/'+file_name):
             os.makedirs('Result/'+file_name)        
         train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std'])
@@ -41,7 +41,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
                 print('Now processing column:{}'.format(column_name))
         if not os.path.exists("DataSet/"):
             os.makedirs("DataSet/")  
-        fname_list = fname.strip('.h5').split('_')
+        fname_list = fname.split('.')[0].split('_')
         data.to_hdf('DataSet/'+''+'_'.join(fname_list[:3])+'_normalized_fea_label_'+'_'.join(fname_list[3:])+'.h5','train_normalized_fea_label',append=False)
         print('write to {}'.format('DataSet/'+''+'_'.join(fname_list[:3])+'_normalized_fea_label_'+'_'.join(fname_list[3:])+'.h5'))
     elif(train_mode == 1):
