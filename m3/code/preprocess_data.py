@@ -26,7 +26,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
         file_name = fname.strip('.h5').strip('train_')
         if not os.path.exists('Result/'+file_name):
             os.makedirs('Result/'+file_name)        
-        train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std','min','max'])
+        train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std'])
         train_label_stat.to_hdf('Result/'+file_name + '/{}_train_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
         print('Stat file generated')
         counter = 0
