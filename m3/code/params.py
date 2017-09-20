@@ -31,7 +31,7 @@ def get_params():
     Params['Proc'] = True
     Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
     # theme
-    Params['theme'] = 'New_data_gridSearch_3'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch_3_normalized'# 本次运行的目的
     ## Preprocessing 
     # Normalization by day
     # label by day
