@@ -43,6 +43,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
             os.makedirs("DataSet/")  
         fname_list = fname.strip('.h5').split('_')
         data.to_hdf('DataSet/'+''+'_'.join(fname_list[:3])+'_normalized_fea_label_'+'_'.join(fname_list[3:])+'.h5','train_normalized_fea_label',append=False)
+        print('write to {}'.format('DataSet/'+''+'_'.join(fname_list[:3])+'_normalized_fea_label_'+'_'.join(fname_list[3:])+'.h5'))
     elif(train_mode == 1):
         print('CvTest mode:')
         # 统计数据，为归一化做准备
