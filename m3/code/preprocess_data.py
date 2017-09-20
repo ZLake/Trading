@@ -9,7 +9,7 @@ import pandas as pd
 from params import get_params
 from read_data import restore_with_chunks
 import numpy as np
-import os
+import os,gc
 
 # 处理data，并保存起来
 def normalize_fea_label(data,fname,train_mode = 0):
@@ -64,6 +64,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
     elif(train_mode == 2):
         print('Pred mode:')
     
+    gc.collect()
     print('Finshed...')
     
     
@@ -74,8 +75,10 @@ if __name__ == "__main__":
     test_name_raw =Params['test_name_raw']
     train = restore_with_chunks(train_name_raw)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-#    normalize_fea_label(train,train_name_raw,train_mode=0)
-#    normalize_fea_label(test,test_name_raw,train_mode=1)
+    normalize_fea_label(train,train_name_raw,train_mode=0)
+    gc.collect()
+    normalize_fea_label(test,test_name_raw,train_mode=1)
+    gc.collect()
 #    
     tt = pd.read_hdf('Result/1332_1333/train_1332_1333_train_label_stat.h5',engine = 'c',memory_map=True)
     print('Finished...')
