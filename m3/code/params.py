@@ -22,8 +22,8 @@ def get_params():
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1268_1311.h5'
-        Params['test_name_raw'] = 'test_1268_1311.h5'
+        Params['train_name_raw'] = 'train_1268_1311_normalized_fea_label.h5'
+        Params['test_name_raw'] = 'test_1268_1311_normalized_fea_label.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
