@@ -29,7 +29,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
         if not os.path.exists('Result/'+file_name):
             os.makedirs('Result/'+file_name)        
         train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std'])
-        train_label_stat.to_hdf('Result/'+file_name + '/{}_train_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
+        train_label_stat.to_hdf('Result/'+'_'.join(file_name.split('_')[:2]) + '/{}_train_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
         print('Stat file generated')
         counter = 0
         for column_name in data.columns[2:]:
@@ -41,15 +41,16 @@ def normalize_fea_label(data,fname,train_mode = 0):
                 print('Now processing column:{}'.format(column_name))
         if not os.path.exists("DataSet/"):
             os.makedirs("DataSet/")  
-        data.to_hdf('DataSet/'+fname.strip('.h5')+'_normalized_fea_label.h5','train_normalized_fea_label',append=False)
+        fname_list = fname.strip('.h5').split('_')
+        data.to_hdf('DataSet/'+''+'_'.join(fname_list[:3])+'_normalized_fea_label_'+'_'.join(fname_list[3:])+'.h5','train_normalized_fea_label',append=False)
     elif(train_mode == 1):
         print('CvTest mode:')
         # 统计数据，为归一化做准备
-        file_name = fname.strip('.h5').strip('train_')
+        file_name = fname.strip('.h5').strip('test_')
         if not os.path.exists('Result/'+file_name):
             os.makedirs('Result/'+file_name)        
         test_label_stat = data.groupby([data.columns[0]])[data.columns[3:]].agg(['mean','std'])
-        test_label_stat.to_hdf('Result/'+file_name + '/{}_train_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
+        test_label_stat.to_hdf('Result/'+file_name + '/{}_test_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
         print('Stat file generated')
         counter = 0
         for column_name in data.columns[3:]:
@@ -66,9 +67,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
     elif(train_mode == 2):
         print('Pred mode:')
     
-    gc.collect()
-    print('Finshed...')
-    
+    gc.collect()    
     
 def preprocess_withChunks(file_name,dest='DataSet/',chunk_size = 100):
     files_str = check_output(["ls", dest]).decode("utf-8")
@@ -94,7 +93,7 @@ if __name__ == "__main__":
     test_name_raw =Params['test_name_raw']
     train = restore_with_chunks(train_name_raw)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    preprocess_withChunks(train_name_raw)
+#    preprocess_withChunks(train_name_raw)
     gc.collect()
     normalize_fea_label(test,test_name_raw,train_mode=1)
     gc.collect()
