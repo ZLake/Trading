@@ -80,5 +80,5 @@ if __name__ == "__main__":
     normalize_fea_label(test,test_name_raw,train_mode=1)
     gc.collect()
 #    
-    tt = pd.read_hdf('Result/1332_1333/train_1332_1333_train_label_stat.h5',engine = 'c',memory_map=True)
+#    tt = pd.read_hdf('Result/1332_1333/train_1332_1333_train_label_stat.h5',engine = 'c',memory_map=True)
     print('Finished...')
