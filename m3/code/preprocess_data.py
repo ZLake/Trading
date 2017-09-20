@@ -37,7 +37,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
             train_label_withStat = pd.merge(data[data.columns[[0,idx]]],train_label_stat[column_name],how='left',left_on = 'csv_index',right_index=True)
             data[column_name] = (train_label_withStat[column_name].sub(train_label_withStat['mean'])).divide(train_label_withStat['std'])
             counter +=1
-            if counter %100 == 0:
+            if counter %1000 == 0:
                 print('Now processing column:{}'.format(column_name))
         if not os.path.exists("DataSet/"):
             os.makedirs("DataSet/")  
