@@ -69,7 +69,7 @@ def normalize_fea_label(data,fname,train_mode = 0):
         print('Pred mode:')
     
     gc.collect()    
-    
+
 def preprocess_withChunks(file_name,dest='DataSet/',chunk_size = 100):
     files_str = check_output(["ls", dest]).decode("utf-8")
     files_list = [file_str for file_str in files_str.strip('\n').split('\n')]
@@ -87,17 +87,30 @@ def preprocess_withChunks(file_name,dest='DataSet/',chunk_size = 100):
         del chunk_data
         gc.collect()
     print('done...')
+def data_stat_analysis(data,fname):
+    # 统计数据，为归一化做准备
+    file_name = fname.split('.')[0].strip('train_')
+    if not os.path.exists('Result/'+file_name):
+        os.makedirs('Result/'+file_name)        
+    train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std'])
+    train_label_stat.to_hdf('Result/'+'_'.join(file_name.split('_')[:2]) + '/{}_train_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
+    print('Stat file generated')
+
     
 if __name__ == "__main__":
     Params = get_params()
     train_name_raw = Params['train_name_raw']
     test_name_raw =Params['test_name_raw']
-#    train = restore_with_chunks(train_name_raw)
+    train = restore_with_chunks(train_name_raw)
     test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-    preprocess_withChunks(train_name_raw)
-    gc.collect()
-    normalize_fea_label(test,test_name_raw,train_mode=1)
-    gc.collect()
+    print("The raw train data size is : {} ".format(train.shape))
+    print("The raw test data size is : {} ".format(test.shape))    
+    data_stat_analysis(train,train_name_raw)
+    data_stat_analysis(test,test_name_raw)
+#    preprocess_withChunks(train_name_raw)
+#    gc.collect()
+#    normalize_fea_label(test,test_name_raw,train_mode=1)
+#    gc.collect()
 #    
 #    tt = pd.read_hdf('Result/1332_1333/train_1332_1333_train_label_stat.h5',engine = 'c',memory_map=True)
     print('Finished...')
