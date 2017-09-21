@@ -107,7 +107,7 @@ def data_coef_analysis(data,fname):
     corr_df = pd.DataFrame(index = ['pearson','spearman'])
 #    label = data[data.columns[2]]
     counter = 0
-    for column_name in data.columns[3:100]:
+    for column_name in data.columns[3:]:
         temp_result = []
         temp_result.append(data[data.columns[2]].corr(data[column_name], method='pearson'))
         temp_result.append(data[data.columns[2]].corr(data[column_name], method='spearman'))
@@ -128,8 +128,8 @@ if __name__ == "__main__":
     print("The raw test data size is : {} ".format(test.shape))   
     data_coef_analysis(train,train_name_raw)
     data_coef_analysis(test,test_name_raw)
-    data_stat_analysis(train,train_name_raw)
-    data_stat_analysis(test,test_name_raw)
+#    data_stat_analysis(train,train_name_raw)
+#    data_stat_analysis(test,test_name_raw)
 #    preprocess_withChunks(train_name_raw)
 #    gc.collect()
 #    normalize_fea_label(test,test_name_raw,train_mode=1)
