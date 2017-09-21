@@ -90,10 +90,10 @@ def preprocess_withChunks(file_name,dest='DataSet/',chunk_size = 100):
 def data_stat_analysis(data,fname):
     # 统计数据，为归一化做准备
     file_name = fname.split('.')[0]
-    if not os.path.exists('Result/'+file_name):
-        os.makedirs('Result/'+file_name)        
+    if not os.path.exists('Result/'+'_'.join(file_name.split('_')[1:3])+'/preprocess'):
+        os.makedirs('Result/'+'_'.join(file_name.split('_')[1:3])+'/preprocess')        
     train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std','min','max'])
-    train_label_stat.to_hdf('Result/'+'_'.join(file_name.split('_')[1:3]) + '/{}_train_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
+    train_label_stat.to_hdf('Result/'+'_'.join(file_name.split('_')[1:3]) +'/preprocess' + '/{}_train_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
     print('Stat file generated')
 
     
