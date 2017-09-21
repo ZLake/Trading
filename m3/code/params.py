@@ -28,10 +28,10 @@ def get_params():
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
     # preprocess suffix
-    Params['Proc'] = True
+    Params['Proc'] = False
     Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
     # theme
-    Params['theme'] = 'New_data_gridSearch_3_normalized'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch_4'# 本次运行的目的
     ## Preprocessing 
     # Normalization by day
     # label by day
@@ -94,9 +94,9 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[1000,1250,1500]
+            'n_estimators':[1200,1600,2000]
             ,'learning_rate':[0.02,0.04,0.06]
-            ,'num_leaves':[30,45,60,70]
+            ,'num_leaves':[40,60,80]
         }
     Params['model_lgb_grid_params_filter'] = [
 #            {'n_estimators':[1000,1500],'learning_rate':[0.04,0.06],'num_leaves':[45,60]}
