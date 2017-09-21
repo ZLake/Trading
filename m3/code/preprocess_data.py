@@ -92,7 +92,7 @@ def data_stat_analysis(data,fname):
     file_name = fname.split('.')[0].strip('train_')
     if not os.path.exists('Result/'+file_name):
         os.makedirs('Result/'+file_name)        
-    train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std'])
+    train_label_stat = data.groupby([data.columns[0]])[data.columns[2:]].agg(['mean','std','min','max'])
     train_label_stat.to_hdf('Result/'+'_'.join(file_name.split('_')[:2]) + '/{}_train_fea_label_stat.h5'.format(fname.strip('.h5')),fname,append=False)
     print('Stat file generated')
 
