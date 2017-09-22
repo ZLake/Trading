@@ -93,7 +93,7 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[1200,2000,2500]
+            'n_estimators':[1200,2000]
             ,'learning_rate':[0.06,0.02]
             ,'num_leaves':[60]
         }
