@@ -35,7 +35,7 @@ def get_params():
     Params['IMPDF'] =  'Preprocess/feature_selection/New_data_gridSearch_4__1268_1311_Model_19_feaImp.h5'
     
     # theme
-    Params['theme'] = 'New_data_gridSearch_4'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch_feaImp'# 本次运行的目的
 
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
