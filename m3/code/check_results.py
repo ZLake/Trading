@@ -147,9 +147,9 @@ def store_topk_fea(theme,train_name_raw,result_df,idx,topks):
     return return_df
 
 if __name__ == "__main__":
-    theme = 'New_data_gridSearch_4'
-    train_name_raw = 'train_1268_1311.h5'
-    test_name_raw = 'test_1268_1311.h5'
+    theme = 'New_data_gridSearch_feaImp'
+    train_name_raw = 'train_1332_1333.h5'
+    test_name_raw = 'test_1332_1333.h5'
     start_time = 0
     if start_time > 0:
         train_name_raw = str(start_time) + '_' + train_name_raw                    
