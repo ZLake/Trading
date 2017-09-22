@@ -78,7 +78,8 @@ def store_result(Params,algo_grid_param,algo
                  ,sample_weight_algo,sample_weight_param
                  ,eval_df,estimator,train_name_raw,test_name_raw
                  ,theme,cost_time
-                 ,feature_importance):
+                 ,feature_importance
+                 ,feaImp_row):
     # store result
     temp_result = []   
     daytime = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -87,6 +88,8 @@ def store_result(Params,algo_grid_param,algo
     temp_result.append(cost_time)
     temp_result.append(train_name_raw.strip('.h5'))
     temp_result.append(test_name_raw.strip('.h5'))
+    temp_result.append(feaImp_row['model'])
+    temp_result.append(feaImp_row['topk'])
     temp_result.append(Params['Outlier_Detector']['algo'])
     if(Params['Outlier_Detector']['algo'] == 'None'):
         temp_result.append('None')
@@ -133,6 +136,8 @@ def store_result(Params,algo_grid_param,algo
                                          ,'cost_time(min)'
                                          ,'train_period'
                                          ,'test_period'
+                                         ,'fea_model'
+                                         ,'fea_topk'
                                          ,'OD algo'
                                          ,'OD params'
                                          ,'OD apply_on_test'

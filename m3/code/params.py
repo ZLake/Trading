@@ -30,14 +30,13 @@ def get_params():
     # preprocess suffix
     Params['Proc'] = False
     Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
+    # feature selection
+    Params['FeaSelect'] = True
+    Params['IMPDF'] =  'Preprocess/feature_selection/New_data_gridSearch_4__1268_1311_Model_19_feaImp.h5'
+    
     # theme
     Params['theme'] = 'New_data_gridSearch_4'# 本次运行的目的
-    ## Preprocessing 
-    # Normalization by day
-    # label by day
-    Params['Normalization_day_label'] = True
-    # feature by day
-    Params['Normalization_day_fea'] = False
+
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
     Params['Sample_weight'] = False
@@ -94,9 +93,9 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[1200,1600,2000]
-            ,'learning_rate':[0.02,0.04,0.06]
-            ,'num_leaves':[40,60,80]
+            'n_estimators':[1200]
+            ,'learning_rate':[0.06]
+            ,'num_leaves':[60]
         }
     Params['model_lgb_grid_params_filter'] = [
 #            {'n_estimators':[1000,1500],'learning_rate':[0.04,0.06],'num_leaves':[45,60]}
