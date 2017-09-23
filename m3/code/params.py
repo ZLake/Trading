@@ -18,13 +18,13 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'New_data_gridSearch_feaImp'# 本次运行的目的
+    Params['theme'] = 'New_data_gridSearch_5'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1268_1311.h5'
+        Params['train_name_raw'] = 'train_1253_1333.h5'
         Params['test_name_raw'] = 'test_1268_1311.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
@@ -33,7 +33,7 @@ def get_params():
     Params['Proc'] = False
     Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
     # feature selection
-    Params['FeaSelect'] = True
+    Params['FeaSelect'] = False
     Params['IMPDF'] =  'Preprocess/feature_selection/New_data_gridSearch_4__1268_1311_Model_19_feaImp.h5'
 
 
@@ -84,7 +84,7 @@ def get_params():
                                           #### found:
                                           ,'reg_alpha':3
                                           ,'reg_lambda':1
-                                          ,'max_bin':50  # can be more
+                                          ,'max_bin':100  # can be more
                                           ,'n_estimators': 2000# can be more
                                           ,'learning_rate':0.02 # can be less
                                           ,'num_leaves':45
@@ -93,13 +93,13 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[1200,2000]
-            ,'learning_rate':[0.06,0.02]
-            ,'num_leaves':[60]
+            'n_estimators':[1800,2000]
+            ,'learning_rate':[0.02,0.16]
+            ,'num_leaves':[45,60]
         }
     Params['model_lgb_grid_params_filter'] = [
-            {'n_estimators':[1200],'learning_rate':[0.02]}
-            ,{'n_estimators':[2000,2500],'learning_rate':[0.06]}
+#            {'n_estimators':[1200],'learning_rate':[0.02]}
+#            ,{'n_estimators':[2000,2500],'learning_rate':[0.06]}
 #            ,{'n_estimators':[2500],'reg_lambda':[0.5]}
             ]
     '''

@@ -88,8 +88,12 @@ def store_result(Params,algo_grid_param,algo
     temp_result.append(cost_time)
     temp_result.append(train_name_raw.strip('.h5'))
     temp_result.append(test_name_raw.strip('.h5'))
-    temp_result.append(feaImp_row['model'])
-    temp_result.append(feaImp_row['topk'])
+    if (feaImp_row is not None):
+        temp_result.append(feaImp_row['model'])
+        temp_result.append(feaImp_row['topk'])
+    else:
+        temp_result.append(None)
+        temp_result.append(None)
     temp_result.append(Params['Outlier_Detector']['algo'])
     if(Params['Outlier_Detector']['algo'] == 'None'):
         temp_result.append('None')

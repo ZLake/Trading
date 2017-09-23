@@ -230,50 +230,7 @@ def training():
                                                     ,algo_row['NO.'])
                                 del estimator,eval_df
                                 print('garbage collection:{}'.format(gc.collect()))
-                        else:
-                            algo_grid_param = algo_row['params']
-                            imp_print('The {}th Algo({}) round'.format(algo_row['NO.'],algo))
-                            print('Algo({}) Param:{}'.format(algo,algo_grid_param))
-                            temp_time_start = time.time()
-                            imp_print(algo,20)
-                            #define classifier:
-                            default_param = Params[algo+'_default_params']
-                            estimator = get_model(algo,default_param,rng,num_threads,Params['Sample_weight'])
-                            estimator.set_params(**algo_grid_param)
-            #                estimator = eval(algo)
-                            #####################
-                            # # Test: 测试获取评价结果
-                            #####################
-                            imp_print("Testing...",40)    
-                            if(Params['Sample_weight'] and (algo in Params['Sample_weight_algo'])):
-                                eval_df,feature_importance = evaluate_test_sampleWeight(estimator,train,y_train,test,y_test,test_csv_index
-                                                    ,sample_weight = sample_weight_final['sample_weight'].values)
-                            else:
-                                eval_df,feature_importance = evaluate_test(estimator,train,y_train,test,y_test,test_csv_index)
-                            
-                            
-                            print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
-                    
-                            for topk in eval_df['topk'].unique():
-                                print('top'+str(int(topk))+' avg:{}'.format(str(eval_df['pred_avg'][eval_df['topk']==topk].mean())))
-                            temp_time_end = time.time()
-                            cost_time = (temp_time_end-temp_time_start)/60                # min
-                            store_result(Params,algo_grid_param,algo
-                                         ,Params['Decay_algo'],decay_param
-                                         ,eval_df,estimator
-                                         ,train_name_raw,test_name_raw,Params['theme'],cost_time
-                                         ,feature_importance
-                                         ,feaImp_row=None)
-                            print('Cost time:{}'.format(cost_time))
-                            #update done info for grid search:algo
-                            update_params_combs(Params['theme'],train_name_raw
-                                                ,stage
-                                                ,algo_row['NO.'])
-                            del estimator,eval_df
-                            print('garbage collection:{}'.format(gc.collect()))
-
-                            
-                        
+            
                     imp_print('Grid search on algo:{} is finished...'.format(algo))
                     print('garbage collection:{}'.format(gc.collect()))
                 
