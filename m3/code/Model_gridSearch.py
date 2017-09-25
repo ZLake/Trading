@@ -244,7 +244,8 @@ def training():
                             #####################
                             # # Test: 测试获取评价结果
                             #####################
-                            imp_print("Testing...",40)    
+                            imp_print("Testing...",40)
+#                            test_per = np.random.permutation(4561)
                             if(Params['Sample_weight'] and (algo in Params['Sample_weight_algo'])):
                                 eval_df,feature_importance = evaluate_test_sampleWeight(estimator,train,y_train,test,y_test,test_csv_index
                                                     ,sample_weight = sample_weight_final['sample_weight'].values)

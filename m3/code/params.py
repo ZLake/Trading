@@ -18,7 +18,7 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'New_data_gridSearch_verify'# 本次运行的目的
+    Params['theme'] = 'Test'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
@@ -93,13 +93,14 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[2000,2100,1900]
-            ,'learning_rate':[0.02,0.021,0.022]
-            ,'num_leaves':[45]
+            'n_estimators':[2000,1200]
+            ,'learning_rate':[0.02,0.06]
+            ,'num_leaves':[45,60]
+            ,'feature_fraction':[1.0]
         }
     Params['model_lgb_grid_params_filter'] = [
-#            {'n_estimators':[1200],'learning_rate':[0.02]}
-#            ,{'n_estimators':[2000,2500],'learning_rate':[0.06]}
+            {'n_estimators':[1200],'learning_rate':[0.02]}
+            ,{'n_estimators':[2000,2500],'learning_rate':[0.06]}
 #            ,{'n_estimators':[2500],'reg_lambda':[0.5]}
             ]
     '''
