@@ -1,5 +1,4 @@
 # coding: utf-8
-get_ipython().system('echo $DISPLAY')
 import sys
 sys.path.insert(0, 'functions')
 
@@ -27,31 +26,18 @@ import gc
 import os
 import warnings
 
-from params import get_params,get_params2,load_params_combs,update_params_combs,paramGridSearch
+from params import get_params,load_params_combs,update_params_combs,paramGridSearch
+from read_data import restore_with_chunks
 from sample_weight import get_sample_weight
 from simple_functions import imp_print
 from outlier_detection import outlier_detection,outlier_detection_grid
 from models import get_model
 from evaluation import evaluate_test,evaluate_test_sampleWeight,store_result
-Params = get_params()
-rng = np.random.RandomState(42)
-if multiprocessing.cpu_count() >=60:
-    num_threads = -1
-else:
-    num_threads = multiprocessing.cpu_count()
-train_name_raw = Params['train_name_raw']
-test_name_raw =Params['test_name_raw']
 
-train= pd.read_hdf('DataSet/'+ train_name_raw,engine = 'c',memory_map=True)
-test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
-train_csv_index = train[train.columns[0]].copy()
-test_csv_index = test[train.columns[0]].copy()
-#Save the 'Id' column
-train_ID = train[train.columns[1]].copy()
-test_ID = test[train.columns[1]].copy()
-y_train = train[train.columns[2]].copy()
-y_test = test[test.columns[2]].copy()
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
-get_ipython().magic('matplotlib')
+
+test_name_raw = 'test_1200_1333.h5'
+test = pd.read_hdf('DataSet/'+ test_name_raw,engine = 'c',memory_map=True)
+test_label_stat = test.groupby([test.columns[0]])[test.columns[2]].agg(['mean','std'])
