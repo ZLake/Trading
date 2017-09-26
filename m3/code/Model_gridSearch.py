@@ -207,10 +207,10 @@ def training():
                                 feature_idx = feaImp_row['idx']
                                 feature_idx.sort()
                                 if(Params['Sample_weight'] and (algo in Params['Sample_weight_algo'])):
-                                    eval_df,feature_importance = evaluate_test_sampleWeight(estimator,train[:,feaImp_row['idx']],y_train,test[:,feaImp_row['idx']],y_test,test_csv_index
+                                    eval_df,feature_importance = evaluate_test_sampleWeight(estimator,train[:,feature_idx],y_train,test[:,feature_idx],y_test,test_csv_index
                                                         ,sample_weight = sample_weight_final['sample_weight'].values)
                                 else:
-                                    eval_df,feature_importance = evaluate_test(estimator,train[:,feaImp_row['idx']],y_train,test[:,feaImp_row['idx']],y_test,test_csv_index)
+                                    eval_df,feature_importance = evaluate_test(estimator,train[:,feature_idx],y_train,test[:,feature_idx],y_test,test_csv_index)
                                 
                                 
                                 print('simple_avg:{}'.format(eval_df['simple_avg'].mean()))
