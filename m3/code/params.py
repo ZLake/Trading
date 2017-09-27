@@ -18,7 +18,7 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'train_1253_1333_test_1268_1311_FeaImp_orded'# 本次运行的目的
+    Params['theme'] = 'train_1253_1333_test_1253_1333_FeaImp_orded'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
