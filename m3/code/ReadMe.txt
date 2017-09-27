@@ -7,6 +7,9 @@ read_data.py:处理批量csv文件为train和test set
 params.py：控制运行参数及模型参数
 single_model_2.py:单模型测试
 Model_gridSearch.py:模型grid_search脚本
+## 训练测试集合
+# 训练：<=1200,1253,1268
+# 测试：>1200-1333,1253-1333,1268-1311
 
 ## 模型参数：
 ### lasso：
