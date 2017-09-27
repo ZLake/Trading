@@ -18,14 +18,14 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'train_1253_1333_test_1253_1333_FeaImp_orded'# 本次运行的目的
+    Params['theme'] = 'train_1200_1333_test_1268_1311_FeaImp_orded'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1253_1333.h5'
-        Params['test_name_raw'] = 'test_1253_1333.h5'
+        Params['train_name_raw'] = 'train_1200_1333.h5'
+        Params['test_name_raw'] = 'test_1268_1311.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
         Params['test_name_raw'] = 'test_1332_1333.h5'
@@ -84,7 +84,7 @@ def get_params():
                                           #### found:
                                           ,'reg_alpha':3
                                           ,'reg_lambda':1
-                                          ,'max_bin':50  # can be more
+                                          ,'max_bin':100  # can be more
                                           ,'n_estimators': 2000# can be more
                                           ,'learning_rate':0.02 # can be less
                                           ,'num_leaves':45
