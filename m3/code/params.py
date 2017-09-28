@@ -18,7 +18,7 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'time_weight_decay_1268_1311_2'# 本次运行的目的
+    Params['theme'] = 'time_weight_decay_1268_1311_3'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
@@ -41,7 +41,7 @@ def get_params():
     ########## Use Sample Weight
     Params['Sample_weight'] = True
     Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0,0.007,0.0008,0.009]} #0.0008,0.0012
+    Params['Decay_params'] = {'decay_constant':[0,0.003,0.0006,0.009,0.010]} #0.0008,0.0012
     Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
     ########## Select Train data start time
     Params['Train_start_time'] = [0] # 请从小到大输入，否则会出现问题
