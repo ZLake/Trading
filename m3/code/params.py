@@ -18,13 +18,13 @@ def get_params():
     ## define global parameters
     Params = {}
     # theme
-    Params['theme'] = 'train_1200_1333_test_1268_1311_FeaImp_orded'# 本次运行的目的
+    Params['theme'] = 'time_weight_decay_1268_1311'# 本次运行的目的
     # grid search continue or reset:
     Params['OD_continue']= True
     Params['Algo_continue']= True
     # data files
     if(multiprocessing.cpu_count() >=60):
-        Params['train_name_raw'] = 'train_1200_1333.h5'
+        Params['train_name_raw'] = 'train_1268_1311.h5'
         Params['test_name_raw'] = 'test_1268_1311.h5'
     else:
         Params['train_name_raw'] ='train_1332_1333.h5'
@@ -33,15 +33,15 @@ def get_params():
     Params['Proc'] = False
     Params['procSuffix'] = '_normalized_fea_label' # _normalized_fea_label,
     # feature selection
-    Params['FeaSelect'] = True
+    Params['FeaSelect'] = False
     Params['IMPDF'] =  'Preprocess/feature_selection/New_data_gridSearch_4__1268_1311_Model_19_feaImp.h5'
 
 
     # OD_IF_Test_Algo_lasso
     ########## Use Sample Weight
-    Params['Sample_weight'] = False
+    Params['Sample_weight'] = True
     Params['Decay_algo'] = 'exp' # exp
-    Params['Decay_params'] = {'decay_constant':[0]} #0.0008,0.0012
+    Params['Decay_params'] = {'decay_constant':[0,0.007,0.0008,0.009]} #0.0008,0.0012
     Params['Sample_weight_algo'] = ['model_lgb']#支持样本权重的算法
     ########## Select Train data start time
     Params['Train_start_time'] = [0] # 请从小到大输入，否则会出现问题
@@ -93,9 +93,9 @@ def get_params():
                                           ,'feature_fraction':0.6
                                           } 
     Params['model_lgb_grid_params'] = {
-            'n_estimators':[2000]
-            ,'learning_rate':[0.02]
-            ,'num_leaves':[45]
+            'n_estimators':[1600,2000,2200]
+            ,'learning_rate':[0.02,0.025]
+            ,'num_leaves':[45,60]
         }
     Params['model_lgb_grid_params_filter'] = [
             {'n_estimators':[1200],'learning_rate':[0.02]}
